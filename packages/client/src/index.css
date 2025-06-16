@@ -3,6 +3,7 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* This block maps CSS variables to Tailwind's theme tokens. No changes are needed here. */
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
@@ -41,73 +42,101 @@
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
+/* Light theme with Empower Project colors */
 :root {
   --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.13 0.028 261.692);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.13 0.028 261.692);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.13 0.028 261.692);
-  --primary: oklch(0.21 0.034 264.665);
-  --primary-foreground: oklch(0.985 0.002 247.839);
-  --secondary: oklch(0.967 0.003 264.542);
-  --secondary-foreground: oklch(0.21 0.034 264.665);
-  --muted: oklch(0.967 0.003 264.542);
-  --muted-foreground: oklch(0.551 0.027 264.364);
-  --accent: oklch(0.967 0.003 264.542);
-  --accent-foreground: oklch(0.21 0.034 264.665);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.928 0.006 264.531);
-  --input: oklch(0.928 0.006 264.531);
-  --ring: oklch(0.707 0.022 261.325);
+
+  /* Core Colors */
+  --background: oklch(1 0 0); /* White: #FFFFFF */
+  --foreground: oklch(0.18 0 0); /* Dark Text: #1A1A1A */
+  --primary: oklch(0.543 0.179 259.44); /* Empower Blue: #2066F3 */
+  --primary-foreground: oklch(1 0 0); /* White: #FFFFFF */
+  --secondary: oklch(0.579 0.237 350.29); /* Empower Pink: #E4007B */
+  --secondary-foreground: oklch(1 0 0); /* White: #FFFFFF */
+
+  /* UI Elements */
+  --card: oklch(1 0 0); /* White: #FFFFFF */
+  --card-foreground: oklch(0.18 0 0); /* Dark Text: #1A1A1A */
+  --popover: oklch(1 0 0); /* White: #FFFFFF */
+  --popover-foreground: oklch(0.18 0 0); /* Dark Text: #1A1A1A */
+
+  /* Muted / Accent Colors */
+  --muted: oklch(0.966 0.031 259.78); /* Light Blue: #F0F5FE */
+  --muted-foreground: oklch(
+    0.543 0.179 259.44
+  ); /* Empower Blue for text on muted */
+  --accent: oklch(0.966 0.031 259.78); /* Light Blue: #F0F5FE */
+  --accent-foreground: oklch(
+    0.543 0.179 259.44
+  ); /* Empower Blue for text on accent */
+
+  /* Other UI states */
+  --destructive: oklch(0.628 0.257 29.23); /* Standard Red: #FF0000 */
+  --border: oklch(0.923 0.041 260.44); /* Lighter Blue/Gray: #E0E7FF */
+  --input: oklch(0.923 0.041 260.44); /* Lighter Blue/Gray: #E0E7FF */
+  --ring: oklch(0.543 0.179 259.44); /* Empower Blue: #2066F3 */
+
+  /* Sidebar (mirrors main theme) */
+  --sidebar: oklch(1 0 0);
+  --sidebar-foreground: oklch(0.18 0 0);
+  --sidebar-primary: oklch(0.543 0.179 259.44);
+  --sidebar-primary-foreground: oklch(1 0 0);
+  --sidebar-accent: oklch(0.966 0.031 259.78);
+  --sidebar-accent-foreground: oklch(0.543 0.179 259.44);
+  --sidebar-border: oklch(0.923 0.041 260.44);
+  --sidebar-ring: oklch(0.543 0.179 259.44);
+
+  /* Chart colors (left as-is, can be customized later) */
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);
   --chart-4: oklch(0.828 0.189 84.429);
   --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.985 0.002 247.839);
-  --sidebar-foreground: oklch(0.13 0.028 261.692);
-  --sidebar-primary: oklch(0.21 0.034 264.665);
-  --sidebar-primary-foreground: oklch(0.985 0.002 247.839);
-  --sidebar-accent: oklch(0.967 0.003 264.542);
-  --sidebar-accent-foreground: oklch(0.21 0.034 264.665);
-  --sidebar-border: oklch(0.928 0.006 264.531);
-  --sidebar-ring: oklch(0.707 0.022 261.325);
 }
 
+/* Dark theme derived from Empower Project colors */
 .dark {
-  --background: oklch(0.13 0.028 261.692);
-  --foreground: oklch(0.985 0.002 247.839);
-  --card: oklch(0.21 0.034 264.665);
-  --card-foreground: oklch(0.985 0.002 247.839);
-  --popover: oklch(0.21 0.034 264.665);
-  --popover-foreground: oklch(0.985 0.002 247.839);
-  --primary: oklch(0.928 0.006 264.531);
-  --primary-foreground: oklch(0.21 0.034 264.665);
-  --secondary: oklch(0.278 0.033 256.848);
-  --secondary-foreground: oklch(0.985 0.002 247.839);
-  --muted: oklch(0.278 0.033 256.848);
-  --muted-foreground: oklch(0.707 0.022 261.325);
-  --accent: oklch(0.278 0.033 256.848);
-  --accent-foreground: oklch(0.985 0.002 247.839);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.551 0.027 264.364);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.21 0.034 264.665);
-  --sidebar-foreground: oklch(0.985 0.002 247.839);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0.002 247.839);
-  --sidebar-accent: oklch(0.278 0.033 256.848);
-  --sidebar-accent-foreground: oklch(0.985 0.002 247.839);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.551 0.027 264.364);
+  /* Core Colors */
+  --background: oklch(0.18 0.03 260); /* Dark Blue: #0D1A33 */
+  --foreground: oklch(0.966 0.031 259.78); /* Light Blue: #F0F5FE */
+  --primary: oklch(0.68 0.16 260); /* Lighter Blue: #5C8FFF */
+  --primary-foreground: oklch(
+    0.18 0.03 260
+  ); /* Dark Blue text on Lighter Blue bg */
+  --secondary: oklch(0.72 0.2 350); /* Lighter Pink: #FF66B2 */
+  --secondary-foreground: oklch(
+    0.18 0.03 260
+  ); /* Dark Blue text on Lighter Pink bg */
+
+  /* UI Elements */
+  --card: oklch(0.25 0.04 259); /* Slightly lighter Dark Blue: #1A2C4D */
+  --card-foreground: oklch(0.966 0.031 259.78); /* Light Blue text */
+  --popover: oklch(0.25 0.04 259);
+  --popover-foreground: oklch(0.966 0.031 259.78);
+
+  /* Muted / Accent Colors */
+  --muted: oklch(0.25 0.04 259);
+  --muted-foreground: oklch(
+    0.8 0.05 260
+  ); /* Even lighter blue for muted text */
+  --accent: oklch(0.33 0.04 259);
+  --accent-foreground: oklch(0.966 0.031 259.78);
+
+  /* Other UI states */
+  --destructive: oklch(0.7 0.22 28); /* Lighter Red */
+  --border: oklch(0.33 0.04 259); /* Darker Blue/Gray: #2A3F66 */
+  --input: oklch(0.33 0.04 259);
+  --ring: oklch(0.68 0.16 260); /* Lighter Blue: #5C8FFF */
+
+  /* Sidebar (mirrors main theme) */
+  --sidebar: oklch(0.18 0.03 260);
+  --sidebar-foreground: oklch(0.966 0.031 259.78);
+  --sidebar-primary: oklch(0.68 0.16 260);
+  --sidebar-primary-foreground: oklch(0.18 0.03 260);
+  --sidebar-accent: oklch(0.33 0.04 259);
+  --sidebar-accent-foreground: oklch(0.966 0.031 259.78);
+  --sidebar-border: oklch(0.33 0.04 259);
+  --sidebar-ring: oklch(0.68 0.16 260);
 }
 
 @layer base {

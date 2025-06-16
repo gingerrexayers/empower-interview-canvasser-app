@@ -9,20 +9,11 @@ RUN npm install -g pnpm@${PNPM_VERSION}
 
 WORKDIR /usr/src/app
 
-# Copy workspace files
-COPY pnpm-workspace.yaml .
-COPY package.json .
-COPY pnpm-lock.yaml .
-
-# Copy package-specific files needed for install
-COPY packages/client/package.json ./packages/client/
-COPY packages/server/package.json ./packages/server/
+# Copy the entire monorepo source code
+COPY . .
 
 # Install all client dependencies
 RUN pnpm install --filter client
-
-# Copy the entire monorepo source code
-COPY . .
 
 # Build the client application
 RUN pnpm --filter client run build

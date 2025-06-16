@@ -11,10 +11,11 @@ services:
     ports:
       - "3001:3001"
     volumes:
-      # Mount the entire monorepo
+      # Mount the entire monorepo for hot-reloading
       - .:/usr/src/app
-      # Use an anonymous volume to prevent local node_modules from overwriting the container's
+      # Use anonymous volumes to prevent local node_modules from overwriting the container's
       - /usr/src/app/node_modules
+      - /usr/src/app/packages/server/node_modules
 
   client:
     build:
@@ -26,10 +27,11 @@ services:
     ports:
       - "3005:5173"
     volumes:
-      # Mount the entire monorepo
+      # Mount the entire monorepo for hot-reloading
       - .:/usr/src/app
-      # Use an anonymous volume to prevent local node_modules from overwriting the container's
+      # Use anonymous volumes to prevent local node_modules from overwriting the container's
       - /usr/src/app/node_modules
+      - /usr/src/app/packages/client/node_modules
 
   db:
     ports:
