@@ -1,3 +1,5 @@
+# packages/client/Dockerfile
+
 ARG NODE_VERSION=22-alpine
 ARG PNPM_VERSION=10.11.0
 
@@ -9,13 +11,20 @@ RUN npm install -g pnpm@${PNPM_VERSION}
 
 WORKDIR /usr/src/app
 
-# Copy the entire monorepo source code
-COPY . .
+# 1. Copy only the dependency definition files first
+COPY pnpm-lock.yaml ./
+COPY package.json ./
+COPY pnpm-workspace.yaml ./
+COPY packages/client/package.json ./packages/client/
 
-# Install all client dependencies
+# 2. Install dependencies for the client
+# This layer will be cached as long as the lockfile doesn't change
 RUN pnpm install --filter client
 
-# Build the client application
+# 3. Copy the rest of the source code
+COPY . .
+
+# 4. Build the client application
 RUN pnpm --filter client run build
 
 # ---- Production Stage ----

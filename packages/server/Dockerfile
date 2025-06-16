@@ -1,48 +1,55 @@
 ARG NODE_VERSION=22-alpine
 ARG PNPM_VERSION=10.11.0
 
-# ---- Builder Stage ----
+# ---- 1. Builder Stage ----
 FROM node:${NODE_VERSION} AS builder
 
-# Install pnpm
 RUN npm install -g pnpm@${PNPM_VERSION}
 
 WORKDIR /usr/src/app
 
-# Copy the entire monorepo source code
+# First, copy the entire project source.
+# The root .dockerignore will prevent local node_modules from being included.
 COPY . .
 
-# Install all server dependencies (including devDependencies for build)
+# Now, with all the source and package.json files in place,
+# run pnpm install. This becomes the single source of truth for all modules.
+# It will install both prod and dev dependencies for the server.
 RUN pnpm install --filter server
 
-# Build the server application
+# Run the build. This is needed for the production stage.
 RUN pnpm --filter server run build
 
-# ---- Production Stage ----
+
+# ---- 2. Production Stage ----
 FROM node:${NODE_VERSION} AS production
 
 ARG PNPM_VERSION=10.11.0
-
-# Install pnpm
 RUN npm install -g pnpm@${PNPM_VERSION}
-
 WORKDIR /usr/src/app
-
 ENV NODE_ENV=production
+RUN apk add --no-cache curl
+RUN addgroup -S node && adduser -S node -G node
 
-# Copy dependency definition files from the builder stage
-COPY --from=builder /usr/src/app/pnpm-lock.yaml .
-COPY --from=builder /usr/src/app/package.json .
-COPY --from=builder /usr/src/app/packages/server/package.json .
+# Copy only the necessary manifests for a production install.
+COPY pnpm-lock.yaml ./
+COPY package.json ./
+COPY pnpm-workspace.yaml ./
+COPY packages/server/package.json ./packages/server/
+COPY packages/client/package.json ./packages/client/
 
-# Install ONLY production dependencies
-RUN pnpm install --prod
+# Install ONLY production dependencies.
+RUN pnpm install --filter server --prod
 
-# Copy the built application from the builder stage
+# Copy the compiled code from the builder stage.
 COPY --from=builder /usr/src/app/packages/server/dist ./dist
 
-# Expose the port the server will listen on
+RUN chown -R node:node /usr/src/app
+USER node
+
 EXPOSE 3001
 
-# Command to run the application
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+  CMD curl -f http://localhost:3001/health || exit 1
+
 CMD ["node", "dist/main.js"]
