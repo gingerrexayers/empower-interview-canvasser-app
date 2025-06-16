@@ -1,0 +1,36 @@
+version: "3.8"
+
+services:
+  server:
+    build:
+      context: .
+      dockerfile: packages/server/Dockerfile
+      # Use the 'builder' stage which has all dev dependencies
+      target: builder
+    command: pnpm --filter server run start:dev
+    ports:
+      - "3001:3001"
+    volumes:
+      # Mount the entire monorepo
+      - .:/usr/src/app
+      # Use an anonymous volume to prevent local node_modules from overwriting the container's
+      - /usr/src/app/node_modules
+
+  client:
+    build:
+      context: .
+      dockerfile: packages/client/Dockerfile
+      # Use the 'builder' stage which has all dev dependencies
+      target: builder
+    command: pnpm --filter client run dev -- --host
+    ports:
+      - "3005:5173"
+    volumes:
+      # Mount the entire monorepo
+      - .:/usr/src/app
+      # Use an anonymous volume to prevent local node_modules from overwriting the container's
+      - /usr/src/app/node_modules
+
+  db:
+    ports:
+      - "3306:3306"
