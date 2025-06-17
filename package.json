@@ -4,7 +4,8 @@
   "description": "",
   "main": "",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build:server": "pnpm --filter server build",
+    "start:server": "node packages/server/dist/main"
   },
   "keywords": [],
   "author": "Ginger Ayers",
