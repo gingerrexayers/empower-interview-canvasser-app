@@ -7,6 +7,6 @@ export interface Canvasser {
 export interface Voter {
   id: number;
   name: string;
-  email: string;
-  notes: string;
+  email: string | null;
+  notes: string | null;
 }

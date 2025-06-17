@@ -25,6 +25,7 @@ export class CreateVoterTable1750123708540 implements MigrationInterface {
           {
             name: 'email',
             type: 'varchar',
+            isNullable: true,
           },
           {
             name: 'notes',
@@ -34,12 +35,6 @@ export class CreateVoterTable1750123708540 implements MigrationInterface {
           {
             name: 'canvasser_id',
             type: 'int',
-          },
-        ],
-        uniques: [
-          {
-            name: 'UQ_voter_email_canvasser',
-            columnNames: ['email', 'canvasser_id'],
           },
         ],
       }),
@@ -66,13 +61,6 @@ export class CreateVoterTable1750123708540 implements MigrationInterface {
       );
       if (foreignKey) {
         await queryRunner.dropForeignKey('voter', foreignKey);
-      }
-
-      const uniqueConstraint = table.uniques.find(
-        (uq) => uq.name === 'UQ_voter_email_canvasser',
-      );
-      if (uniqueConstraint) {
-        await queryRunner.dropUniqueConstraint('voter', uniqueConstraint);
       }
     }
     await queryRunner.dropTable('voter');

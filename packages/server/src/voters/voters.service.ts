@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateVoterDto } from './dto/create-voter.dto';
 import { Voter } from './voter.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, QueryFailedError } from 'typeorm';
+import { Repository, QueryFailedError, Like } from 'typeorm';
 import { CanvasserAlreadyHasVoterWithEmailException } from './exceptions/canvasser-already-has-voter-with-email.exception';
 import { UpdateVoterDto } from './dto/update-voter.dto';
 
@@ -38,8 +38,24 @@ export class VotersService {
     }
   }
 
-  async getVoters(canvasserId: number): Promise<Voter[]> {
-    return this.voterRepository.find({ where: { canvasser_id: canvasserId } });
+  async getVoters(canvasserId: number, searchTerm?: string): Promise<Voter[]> {
+    if (searchTerm) {
+      return this.voterRepository.find({
+        where: [
+          { canvasser_id: canvasserId, name: Like(`%${searchTerm}%`) },
+          { canvasser_id: canvasserId, notes: Like(`%${searchTerm}%`) },
+        ],
+        order: {
+          updated_at: 'DESC',
+        },
+      });
+    }
+    return this.voterRepository.find({
+      where: { canvasser_id: canvasserId },
+      order: {
+        updated_at: 'DESC',
+      },
+    });
   }
 
   async updateVoter(
@@ -54,5 +70,32 @@ export class VotersService {
       throw new Error('Voter not found');
     }
     return this.voterRepository.save({ ...voter, ...updateVoterDto });
+  }
+
+  async getVotersAsCsv(canvasserId: number): Promise<string> {
+    const voters = await this.voterRepository.find({
+      where: { canvasser_id: canvasserId },
+      order: {
+        name: 'ASC',
+      },
+    });
+
+    if (!voters.length) {
+      return 'No voters found';
+    }
+
+    const header = 'ID,Name,Email,Notes,CreatedAt,UpdatedAt\n';
+    const csvRows = voters.map((voter) => {
+      const id = voter.id;
+      // Escape commas and newlines in string fields to prevent CSV corruption
+      const name = `"${voter.name.replace(/"/g, '""')}"`;
+      const email = voter.email ? `"${voter.email.replace(/"/g, '""')}"` : '';
+      const notes = voter.notes ? `"${voter.notes.replace(/"/g, '""')}"` : '';
+      const createdAt = voter.created_at.toISOString();
+      const updatedAt = voter.updated_at.toISOString();
+      return `${id},${name},${email},${notes},${createdAt},${updatedAt}`;
+    });
+
+    return header + csvRows.join('\n');
   }
 }

@@ -7,7 +7,10 @@ import {
   Request,
   Param,
   Patch,
+  Query,
+  Res,
 } from '@nestjs/common';
+import { Response } from 'express';
 import { AuthGuard } from '../auth/auth.guard';
 import { CreateVoterDto } from './dto/create-voter.dto';
 import { Voter } from './voter.entity';
@@ -21,8 +24,11 @@ export class VotersController {
   constructor(private readonly votersService: VotersService) {}
 
   @Get()
-  async allVoters(@Request() req: RequestWithUser) {
-    return await this.votersService.getVoters(req.user.id);
+  async allVoters(
+    @Request() req: RequestWithUser,
+    @Query('search') search?: string,
+  ) {
+    return await this.votersService.getVoters(req.user.id, search);
   }
 
   @Patch(':id')
@@ -45,5 +51,16 @@ export class VotersController {
   ): Promise<Voter> {
     console.log(req.user);
     return await this.votersService.create(createVoterDto, req.user.id);
+  }
+
+  @Get('export/csv')
+  async exportVotersAsCsv(
+    @Request() req: RequestWithUser,
+    @Res() res: Response,
+  ) {
+    const csvData = await this.votersService.getVotersAsCsv(req.user.id);
+    res.setHeader('Content-Type', 'text/csv');
+    res.setHeader('Content-Disposition', 'attachment; filename="voters.csv"');
+    res.send(csvData);
   }
 }

@@ -4,12 +4,12 @@ import {
   Column,
   ManyToOne,
   JoinColumn,
-  Unique,
+  CreateDateColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 import { Canvasser } from '../canvassers/canvasser.entity';
 
 @Entity('voter')
-@Unique('UQ_voter_email_canvasser', ['email', 'canvasser_id'])
 export class Voter {
   @PrimaryGeneratedColumn()
   id: number;
@@ -17,8 +17,8 @@ export class Voter {
   @Column()
   name: string;
 
-  @Column()
-  email: string;
+  @Column({ type: 'varchar', nullable: true })
+  email: string | null;
 
   @Column({ type: 'text', nullable: true })
   notes: string;
@@ -31,4 +31,14 @@ export class Voter {
   })
   @JoinColumn({ name: 'canvasser_id' })
   canvasser: Canvasser;
+
+  @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  created_at: Date;
+
+  @UpdateDateColumn({
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP',
+    onUpdate: 'CURRENT_TIMESTAMP',
+  })
+  updated_at: Date;
 }
