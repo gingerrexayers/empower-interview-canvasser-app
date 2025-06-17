@@ -73,7 +73,6 @@ describe('AuthService', () => {
         name: registerDto.name,
         email: registerDto.email,
         password: hashedPassword,
-        voters: [], // Canvasser.voters is Voter[] | undefined, so an empty array is fine.
       };
 
       // Object that the service is expected to return (password excluded)
