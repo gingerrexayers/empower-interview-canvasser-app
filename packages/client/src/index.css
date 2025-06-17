@@ -44,7 +44,7 @@
 
 /* Light theme with Empower Project colors */
 :root {
-  --radius: 0.625rem;
+  --radius: 0.5rem; /* Adjusted from 0.625rem to better match website's buttons */
 
   /* Core Colors */
   --background: oklch(1 0 0); /* White: #FFFFFF */
@@ -62,9 +62,7 @@
 
   /* Muted / Accent Colors */
   --muted: oklch(0.966 0.031 259.78); /* Light Blue: #F0F5FE */
-  --muted-foreground: oklch(
-    0.543 0.179 259.44
-  ); /* Empower Blue for text on muted */
+  --muted-foreground: oklch(0.7 0 0); /* Neutral grey for placeholders */
   --accent: oklch(0.966 0.031 259.78); /* Light Blue: #F0F5FE */
   --accent-foreground: oklch(
     0.543 0.179 259.44
@@ -117,8 +115,8 @@
   /* Muted / Accent Colors */
   --muted: oklch(0.25 0.04 259);
   --muted-foreground: oklch(
-    0.8 0.05 260
-  ); /* Even lighter blue for muted text */
+    0.8 0 0
+  ); /* Lighter neutral grey for dark mode placeholders */
   --accent: oklch(0.33 0.04 259);
   --accent-foreground: oklch(0.966 0.031 259.78);
 
