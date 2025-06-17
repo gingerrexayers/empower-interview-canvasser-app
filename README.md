@@ -99,10 +99,50 @@ Make sure you have the following tools installed on your system:
 4.  **Run Database Migrations:**
     Once the containers are running, open a new terminal window and run the database migrations. This command executes the TypeORM CLI inside the running `server` container to set up the database schema.
     ```bash
-    docker-compose exec server pnpm run migration:run
+    docker-compose exec server pnpm --filter server run migration:run
     ```
 
 You should now be able to access the application at `http://localhost:3005`, register a new user, and start using the app!
+
+## 🧪 Running Tests
+
+This project includes unit tests for the server and end-to-end (E2E) tests for the client application.
+
+### Server Unit Tests
+
+Unit tests for the NestJS server are located in the `packages/server` directory and use Jest.
+
+To run the server tests:
+
+```bash
+pnpm --filter server run test
+```
+
+### Client End-to-End Tests
+
+The client application uses Cypress for end-to-end testing to simulate real user scenarios.
+
+**To run the E2E tests, you must have the development environment running in a separate terminal:**
+
+```bash
+# In terminal 1: Start the application
+./start.sh
+```
+
+**Then, in a second terminal, you can run Cypress:**
+
+- **Interactive Mode (Recommended for development):**
+  Opens the Cypress Test Runner UI where you can watch tests run in real-time.
+  ```bash
+  # From the project root
+  pnpm --filter client run cy:open
+  ```
+- **Headless Mode (For CI/automation):**
+  Runs all tests in the terminal without launching a browser UI.
+  ```bash
+  # From the project root
+  pnpm --filter client run cy:run
+  ```
 
 ## 📜 Available Scripts
 
