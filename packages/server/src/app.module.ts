@@ -5,7 +5,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { dataSourceOptions } from './data-source';
 import { AuthModule } from './auth/auth.module';
-import { UsersModule } from './users/users.module';
+import { CanvassersModule } from './canvassers/canvassers.module';
+import { VotersModule } from './voters/voters.module';
 
 @Module({
   imports: [
@@ -16,7 +17,8 @@ import { UsersModule } from './users/users.module';
     }),
     TypeOrmModule.forRoot(dataSourceOptions),
     AuthModule,
-    UsersModule,
+    CanvassersModule,
+    VotersModule,
   ],
   controllers: [AppController],
   providers: [AppService],
