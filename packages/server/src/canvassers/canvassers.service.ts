@@ -17,8 +17,4 @@ export class CanvassersService {
   findOne(id: number): Promise<Canvasser | null> {
     return this.canvassersRepository.findOneBy({ id });
   }
-
-  async remove(id: number): Promise<void> {
-    await this.canvassersRepository.delete(id);
-  }
 }

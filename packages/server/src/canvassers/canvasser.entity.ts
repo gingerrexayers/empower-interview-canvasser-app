@@ -16,5 +16,5 @@ export class Canvasser {
   password: string;
 
   @OneToMany(() => Voter, (voter) => voter.canvasser)
-  voters: Voter[];
+  voters?: Voter[];
 }

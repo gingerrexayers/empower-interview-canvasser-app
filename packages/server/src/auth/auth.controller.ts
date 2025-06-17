@@ -9,7 +9,9 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('register')
-  async register(@Body() registerDto: RegisterDto): Promise<Canvasser> {
+  async register(
+    @Body() registerDto: RegisterDto,
+  ): Promise<Omit<Canvasser, 'password'>> {
     return await this.authService.register(registerDto);
   }
 

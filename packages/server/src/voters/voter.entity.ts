@@ -30,7 +30,7 @@ export class Voter {
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'canvasser_id' })
-  canvasser: Canvasser;
+  canvasser?: Canvasser;
 
   @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   created_at: Date;

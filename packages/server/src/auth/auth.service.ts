@@ -7,7 +7,7 @@ import * as bcrypt from 'bcrypt';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 import { JwtService } from '@nestjs/jwt';
-import { Canvasser } from 'src/canvassers/canvasser.entity';
+import { Canvasser } from '../canvassers/canvasser.entity';
 import { QueryFailedError, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CanvasserEmailAlreadyExistsException } from './exceptions/canvasser-email-already-exists.exception';
@@ -37,7 +37,9 @@ export class AuthService {
     return { token };
   }
 
-  async register(registerDto: RegisterDto): Promise<Canvasser> {
+  async register(
+    registerDto: RegisterDto,
+  ): Promise<Omit<Canvasser, 'password'>> {
     const { name, email, password } = registerDto;
 
     const salt = await bcrypt.genSalt();
@@ -54,7 +56,7 @@ export class AuthService {
       // Exclude password from the returned user object
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { password: _password, ...result } = user;
-      return result as Canvasser;
+      return result;
     } catch (error) {
       if (error instanceof QueryFailedError) {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
