@@ -24,12 +24,10 @@ export class AuthService {
     const { email, password } = loginDto;
     const user = await this.canvassersRepository.findOneBy({ email });
     if (!user) {
-      console.log('User not found');
       throw new UnauthorizedException('Invalid login!');
     }
     const isPasswordMatching = await bcrypt.compare(password, user.password);
     if (!isPasswordMatching) {
-      console.log('Password not matching');
       throw new UnauthorizedException('Invalid login!');
     }
     const payload = { email, id: user.id, name: user.name };
