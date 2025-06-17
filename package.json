@@ -5,7 +5,9 @@
   "main": "",
   "scripts": {
     "build:server": "pnpm --filter server build",
-    "start:server": "node packages/server/dist/main"
+    "start:server": "node packages/server/dist/main",
+    "build:client": "pnpm --filter client build",
+    "serve:client": "pnpm --filter client preview"
   },
   "keywords": [],
   "author": "Ginger Ayers",
