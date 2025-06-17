@@ -53,7 +53,7 @@ export function VoterList({ voters }: VoterListProps) {
 
   return (
     <Table>
-      <TableHeader>
+      <TableHeader className="sm:sticky sm:top-0 sm:z-10 sm:bg-card">
         <TableRow className="hidden sm:table-row">
           <TableHead className="w-[250px]">Voter</TableHead>
           <TableHead>Notes</TableHead>

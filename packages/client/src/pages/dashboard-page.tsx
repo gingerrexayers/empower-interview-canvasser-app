@@ -38,11 +38,11 @@ export function DashboardPage() {
   };
 
   return (
-    <div>
-      <AppHeader />
-      <div className="container mx-auto p-4 md:p-8">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between gap-4">
+    <div className="flex flex-col h-screen">
+      <AppHeader className="flex-shrink-0" />
+      <div className="flex-grow overflow-y-auto container mx-auto p-4 md:p-8">
+        <Card className="flex flex-col h-full">
+          <CardHeader className="flex flex-row items-center justify-between gap-4 flex-shrink-0">
             <CardTitle>Your Voters</CardTitle>
 
             {/* Search input for large screens (lg+) */}
@@ -68,9 +68,9 @@ export function DashboardPage() {
               <CreateVoterDialog />
             </div>
           </CardHeader>
-          <CardContent>
+          <CardContent className="flex flex-col flex-grow overflow-y-auto">
             {/* Search input for small to medium screens */}
-            <div className="mb-4 lg:hidden">
+            <div className="mb-4 lg:hidden flex-shrink-0">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                 <Input

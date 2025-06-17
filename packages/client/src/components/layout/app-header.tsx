@@ -2,12 +2,17 @@ import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
 import logo from "@/assets/EmpowerProject_Logo.png";
 import favicon from "@/assets/favicon.png";
+import { cn } from "@/lib/utils";
 
-export function AppHeader() {
+interface AppHeaderProps {
+  className?: string;
+}
+
+export function AppHeader({ className }: AppHeaderProps) {
   const { logout } = useAuth();
 
   return (
-    <header className="relative flex items-center justify-between bg-primary p-4 px-4 md:px-8">
+    <header className={cn("relative flex items-center justify-between bg-primary p-4 px-4 md:px-8", className)}>
       {/* Logo on the left */}
       <div className="flex items-center">
         <img
