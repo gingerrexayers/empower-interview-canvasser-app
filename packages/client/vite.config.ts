@@ -14,4 +14,7 @@ export default defineConfig({
   server: {
     host: "0.0.0.0",
   },
+  preview: {
+    allowedHosts: ['empower-canvasser.up.railway.app'],
+  },
 });
