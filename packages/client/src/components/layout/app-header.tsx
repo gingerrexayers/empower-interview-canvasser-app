@@ -1,7 +1,6 @@
 import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
 import logo from "@/assets/EmpowerProject_Logo.png";
-import favicon from "@/assets/favicon.png";
 import { cn } from "@/lib/utils";
 
 interface AppHeaderProps {
@@ -19,12 +18,7 @@ export function AppHeader({ className, showLogoutButton = true }: AppHeaderProps
         <img
           src={logo}
           alt="Empower Project Logo"
-          className="mr-3 hidden h-10 w-auto md:block"
-        />
-        <img
-          src={favicon}
-          alt="Empower Project Logo Small"
-          className="mr-3 block h-8 w-8 md:hidden"
+          className="mr-3 h-8 w-auto md:h-10" // Adjusted: show on all, h-8 mobile, h-10 md+
         />
         {/* Mobile CANVASSER text (left-aligned with logo) */}
         <span className="text-3xl font-extrabold uppercase text-primary-foreground md:hidden">

@@ -38,8 +38,9 @@ Empower Canvasser App is a full-stack monorepo application designed to help poli
 | **Routing**        | [React Router](https://reactrouter.com/)                                                                               |
 | **Backend**        | [NestJS](https://nestjs.com/)                                                                                          |
 | **Database**       | [MySQL](https://www.mysql.com/), [TypeORM](https://typeorm.io/)                                                        |
-| **Authentication** | [Passport.js](https://www.passportjs.org/) (JWT Strategy)                                                              |
-| **DevOps**         | [Docker](https://www.docker.com/), [Nginx](https://www.nginx.com/)                                                     |
+| **Authentication** | [@nestjs/jwt](https://github.com/nestjs/jwt)                                                                           |
+| **Testing**        | [Jest](https://jestjs.io/), [Cypress](https://www.cypress.io/)                                                          |
+| **DevOps**         | [Docker](https://www.docker.com/), [Nginx](https://www.nginx.com/), [Railway](https://railway.app/)                    |
 | **Tooling**        | [pnpm](https://pnpm.io/), [ESLint](https://eslint.org/), [Prettier](https://prettier.io/)                              |
 
 ## 📂 Project Structure
