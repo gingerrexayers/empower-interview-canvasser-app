@@ -32,7 +32,7 @@ export class AuthService {
       console.log('Password not matching');
       throw new UnauthorizedException('Invalid login!');
     }
-    const payload = { email, id: user.id };
+    const payload = { email, id: user.id, name: user.name };
     const token = this.jwtService.sign(payload);
     return { token };
   }

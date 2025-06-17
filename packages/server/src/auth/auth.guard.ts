@@ -8,6 +8,8 @@ import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
 
 interface JwtPayload {
+  id: number; // Added user ID
+  name: string; // Added user name
   email: string;
   iat: number;
   exp: number;

@@ -1,9 +1,13 @@
 import type { Config } from "tailwindcss";
+import defaultTheme from "tailwindcss/defaultTheme";
 
 const config = {
   content: ["./index.html", "./src/**/*.{ts,tsx,html,js,jsx}"],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ['Roboto', ...defaultTheme.fontFamily.sans],
+      },
       // Keyframes used by shadcn-ui components like Accordion and Collapsible
       keyframes: {
         "accordion-down": {
