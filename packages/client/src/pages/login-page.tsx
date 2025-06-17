@@ -43,12 +43,12 @@ export function LoginPage() {
       const response = await api.post<{ token: string }>("/auth/login", values);
       login(response.data.token);
 
-      toast.success("Login Successful", {
+      void toast.success("Login Successful", {
         description: "Welcome back!",
       });
     } catch (error) {
       console.log(error);
-      toast.error("Login Failed", {
+      void toast.error("Login Failed", {
         description: "Invalid email or password. Please try again.",
       });
     }
@@ -67,7 +67,7 @@ export function LoginPage() {
         </CardHeader>
         <CardContent>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <form onSubmit={(e) => void form.handleSubmit(onSubmit)(e)} className="space-y-4">
               <FormField
                 control={form.control}
                 name="email"

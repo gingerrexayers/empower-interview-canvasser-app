@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect, type ReactNode } from "react";
+import { createContext, useState, useEffect, useCallback, type ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 import type { Canvasser } from "@/types";
 import { jwtDecode } from "jwt-decode";
@@ -32,14 +32,29 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
 
+  const logout = useCallback(() => {
+    localStorage.removeItem("authToken");
+    setToken(null);
+    setUser(null);
+    void navigate("/login");
+  }, [navigate]);
+
+  const login = useCallback((newToken: string) => {
+    localStorage.setItem("authToken", newToken);
+    setToken(newToken);
+    const decoded: JwtPayload = jwtDecode(newToken);
+    setUser({ id: decoded.id, email: decoded.email, name: decoded.name });
+    void navigate("/dashboard");
+  }, [navigate]);
+
   useEffect(() => {
-    const initializeAuth = async () => {
+    const initializeAuth = () => {
       if (token) {
         try {
           const decoded: JwtPayload = jwtDecode(token);
           // Check if token is expired
           if (decoded.exp * 1000 < Date.now()) {
-            logout();
+            logout(); // Now calls the memoized version
           } else {
             // You could fetch user details here if needed
             // For now, we'll just use the decoded token
@@ -51,29 +66,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           }
         } catch (error) {
           console.error("Invalid token:", error);
-          logout();
+          logout(); // Now calls the memoized version
         }
       }
       setIsLoading(false);
     };
 
     initializeAuth();
-  }, [token]);
-
-  const login = (newToken: string) => {
-    localStorage.setItem("authToken", newToken);
-    setToken(newToken);
-    const decoded: JwtPayload = jwtDecode(newToken);
-    setUser({ id: decoded.id, email: decoded.email, name: decoded.name });
-    navigate("/dashboard");
-  };
-
-  const logout = () => {
-    localStorage.removeItem("authToken");
-    setToken(null);
-    setUser(null);
-    navigate("/login");
-  };
+  }, [token, logout]);
 
   const value = {
     isAuthenticated: !!token,

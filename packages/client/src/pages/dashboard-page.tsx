@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState } from "react";
 import { useVoters } from "@/hooks/use-voters";
 import { useDebounce } from "@/hooks/use-debounce";
 import api from "@/api";
@@ -19,13 +19,13 @@ export function DashboardPage() {
   const handleExportCsv = async () => {
     try {
       const response = await api.get("/voters/export/csv", {
-        responseType: 'blob', // Important to handle binary data
+        responseType: "blob", // Important to handle binary data
       });
-      const blob = new Blob([response.data], { type: 'text/csv' });
+      const blob = new Blob([response.data], { type: "text/csv" });
       const url = window.URL.createObjectURL(blob);
-      const link = document.createElement('a');
+      const link = document.createElement("a");
       link.href = url;
-      link.setAttribute('download', 'voters.csv');
+      link.setAttribute("download", "voters.csv");
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -60,7 +60,7 @@ export function DashboardPage() {
             </div>
 
             <div className="flex items-center gap-2">
-              <Button variant="outline" onClick={handleExportCsv}>
+              <Button variant="outline" onClick={void handleExportCsv}>
                 <Download className="mr-2 h-4 w-4" />
                 <span className="hidden sm:inline">Export CSV</span>
                 <span className="sm:hidden">Export</span>

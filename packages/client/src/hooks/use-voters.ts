@@ -24,15 +24,15 @@ export function useCreateVoter() {
     mutationFn: (newVoter: Omit<Voter, "id">) =>
       api.post<Voter>("/voters", newVoter),
     onSuccess: () => {
-      toast.success("Voter created successfully!");
+      void toast.success("Voter created successfully!");
       // Invalidate the voters query to refetch the list
-      queryClient.invalidateQueries({ queryKey: ["voters"] });
+      void queryClient.invalidateQueries({ queryKey: ["voters"] });
     },
     onError: (error: unknown) => {
       const message =
         (error as { response: { data: { message: string } } })?.response?.data
           ?.message || "Failed to create voter.";
-      toast.error(message);
+      void toast.error(message);
     },
   });
 }
@@ -43,14 +43,14 @@ export function useUpdateVoterNotes() {
     mutationFn: ({ id, notes }: { id: number; notes: string }) =>
       api.patch<Voter>(`/voters/${id}`, { notes }),
     onSuccess: () => {
-      toast.success("Voter notes updated!");
-      queryClient.invalidateQueries({ queryKey: ["voters"] });
+      void toast.success("Voter notes updated!");
+      void queryClient.invalidateQueries({ queryKey: ["voters"] });
     },
     onError: (error: unknown) => {
       const message =
         (error as { response: { data: { message: string } } })?.response?.data
           ?.message || "Failed to update notes.";
-      toast.error(message);
+      void toast.error(message);
     },
   });
 }

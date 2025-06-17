@@ -21,8 +21,8 @@ COPY packages/client/package.json ./packages/client/
 # This layer will be cached as long as the lockfile doesn't change
 RUN pnpm install --filter client
 
-# 3. Copy the rest of the source code
-COPY . .
+# 3. Copy the client package source code
+COPY packages/client ./packages/client/
 
 # 4. Build the client application
 RUN pnpm --filter client run build

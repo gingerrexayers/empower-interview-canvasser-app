@@ -107,7 +107,7 @@ export function CreateVoterDialog() {
         </DialogHeader>
         <Form {...form}>
           <form
-            onSubmit={form.handleSubmit(onSubmit)}
+            onSubmit={(e) => void form.handleSubmit(onSubmit)(e)}
             className="space-y-4 py-4"
           >
             <FormField

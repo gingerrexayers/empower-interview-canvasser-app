@@ -37,21 +37,23 @@ export function RegisterPage() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: { name: "", email: "", password: "" },
-    mode: 'onChange', // Validate on input change for immediate feedback
+    mode: "onChange", // Validate on input change for immediate feedback
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       await api.post("/auth/register", values);
 
-      toast.success("Registration Successful", {
+      void toast.success("Registration Successful", {
         description: "You can now log in with your credentials.",
       });
-      navigate("/login");
+      await navigate("/login");
     } catch (error: unknown) {
-      console.error(error);
+      void console.error(error);
       let errorMessage = "An unexpected error occurred. Please try again.";
-      const errorResponseData = (error as { response?: { data?: { message?: string | string[] } } })?.response?.data;
+      const errorResponseData = (
+        error as { response?: { data?: { message?: string | string[] } } }
+      )?.response?.data;
 
       if (errorResponseData && errorResponseData.message) {
         if (Array.isArray(errorResponseData.message)) {
@@ -63,7 +65,7 @@ export function RegisterPage() {
         }
       }
 
-      toast.error("Registration Failed", {
+      void toast.error("Registration Failed", {
         description: errorMessage,
       });
     }
@@ -81,7 +83,7 @@ export function RegisterPage() {
           <CardContent>
             <Form {...form}>
               <form
-                onSubmit={form.handleSubmit(onSubmit)}
+                onSubmit={(e) => void form.handleSubmit(onSubmit)(e)}
                 className="space-y-4"
               >
                 <FormField
@@ -126,7 +128,9 @@ export function RegisterPage() {
                 <Button
                   type="submit"
                   className="w-full"
-                  disabled={form.formState.isSubmitting || !form.formState.isValid}
+                  disabled={
+                    form.formState.isSubmitting || !form.formState.isValid
+                  }
                 >
                   {form.formState.isSubmitting
                     ? "Creating Account..."
