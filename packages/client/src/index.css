@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-@custom-variant dark (&:is(.dark *));
+
 
 /* This block maps CSS variables to Tailwind's theme tokens. No changes are needed here. */
 @theme inline {
@@ -91,50 +91,7 @@
   --chart-5: oklch(0.769 0.188 70.08);
 }
 
-/* Dark theme derived from Empower Project colors */
-.dark {
-  /* Core Colors */
-  --background: oklch(0.18 0.03 260); /* Dark Blue: #0D1A33 */
-  --foreground: oklch(0.966 0.031 259.78); /* Light Blue: #F0F5FE */
-  --primary: oklch(0.68 0.16 260); /* Lighter Blue: #5C8FFF */
-  --primary-foreground: oklch(
-    0.18 0.03 260
-  ); /* Dark Blue text on Lighter Blue bg */
-  --secondary: oklch(0.72 0.2 350); /* Lighter Pink: #FF66B2 */
-  --secondary-foreground: oklch(
-    0.18 0.03 260
-  ); /* Dark Blue text on Lighter Pink bg */
 
-  /* UI Elements */
-  --card: oklch(0.25 0.04 259); /* Slightly lighter Dark Blue: #1A2C4D */
-  --card-foreground: oklch(0.966 0.031 259.78); /* Light Blue text */
-  --popover: oklch(0.25 0.04 259);
-  --popover-foreground: oklch(0.966 0.031 259.78);
-
-  /* Muted / Accent Colors */
-  --muted: oklch(0.25 0.04 259);
-  --muted-foreground: oklch(
-    0.8 0 0
-  ); /* Lighter neutral grey for dark mode placeholders */
-  --accent: oklch(0.33 0.04 259);
-  --accent-foreground: oklch(0.966 0.031 259.78);
-
-  /* Other UI states */
-  --destructive: oklch(0.7 0.22 28); /* Lighter Red */
-  --border: oklch(0.33 0.04 259); /* Darker Blue/Gray: #2A3F66 */
-  --input: oklch(0.33 0.04 259);
-  --ring: oklch(0.68 0.16 260); /* Lighter Blue: #5C8FFF */
-
-  /* Sidebar (mirrors main theme) */
-  --sidebar: oklch(0.18 0.03 260);
-  --sidebar-foreground: oklch(0.966 0.031 259.78);
-  --sidebar-primary: oklch(0.68 0.16 260);
-  --sidebar-primary-foreground: oklch(0.18 0.03 260);
-  --sidebar-accent: oklch(0.33 0.04 259);
-  --sidebar-accent-foreground: oklch(0.966 0.031 259.78);
-  --sidebar-border: oklch(0.33 0.04 259);
-  --sidebar-ring: oklch(0.68 0.16 260);
-}
 
 @layer base {
   * {

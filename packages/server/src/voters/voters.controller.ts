@@ -10,12 +10,12 @@ import {
   Query,
   Res,
 } from '@nestjs/common';
-import { Response } from 'express';
+import type { Response } from 'express';
 import { AuthGuard } from '../auth/auth.guard';
 import { CreateVoterDto } from './dto/create-voter.dto';
 import { Voter } from './voter.entity';
 import { VotersService } from './voters.service';
-import { RequestWithUser } from '../common/request-with-user';
+import type { RequestWithUser } from '../common/request-with-user';
 import { UpdateVoterDto } from './dto/update-voter.dto';
 
 @Controller('voters')
@@ -49,7 +49,6 @@ export class VotersController {
     @Body() createVoterDto: CreateVoterDto,
     @Request() req: RequestWithUser,
   ): Promise<Voter> {
-    console.log(req.user);
     return await this.votersService.create(createVoterDto, req.user.id);
   }
 

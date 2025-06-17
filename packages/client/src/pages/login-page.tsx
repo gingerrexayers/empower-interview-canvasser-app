@@ -35,6 +35,7 @@ export function LoginPage() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: { email: "", password: "" },
+    mode: 'onChange', // Validate on input change for immediate feedback
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
@@ -96,7 +97,7 @@ export function LoginPage() {
               <Button
                 type="submit"
                 className="w-full"
-                disabled={form.formState.isSubmitting}
+                disabled={form.formState.isSubmitting || !form.formState.isValid}
               >
                 {form.formState.isSubmitting ? "Signing In..." : "Sign In"}
               </Button>

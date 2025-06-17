@@ -3,6 +3,7 @@
     "module": "nodenext",
     "declaration": true,
     "removeComments": true,
+    "isolatedModules": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,

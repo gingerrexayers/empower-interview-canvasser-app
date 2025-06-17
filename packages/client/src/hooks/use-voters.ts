@@ -7,12 +7,14 @@ export function useVoters(searchTerm?: string) {
   return useQuery<Voter[]>({
     queryKey: ["voters", searchTerm || ""], // Add searchTerm to queryKey, use empty string if undefined
     queryFn: async () => {
-      const endpoint = searchTerm ? `/voters?search=${encodeURIComponent(searchTerm)}` : "/voters";
+      const endpoint = searchTerm
+        ? `/voters?search=${encodeURIComponent(searchTerm)}`
+        : "/voters";
       const { data } = await api.get<Voter[]>(endpoint);
       return data;
     },
     // Keep previous data while new data is fetching for a smoother UX
-    // placeholderData: (previousData) => previousData,
+    placeholderData: (previousData) => previousData,
   });
 }
 

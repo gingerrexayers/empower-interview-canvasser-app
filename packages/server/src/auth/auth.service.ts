@@ -22,6 +22,7 @@ export class AuthService {
   ) {}
   async login(loginDto: LoginDto): Promise<{ token: string }> {
     const { email, password } = loginDto;
+    console.log(email, password);
     const user = await this.canvassersRepository.findOneBy({ email });
     if (!user) {
       throw new UnauthorizedException('Invalid login!');
@@ -62,7 +63,7 @@ export class AuthService {
           throw new CanvasserEmailAlreadyExistsException(email);
         }
       }
-      console.log(error);
+      console.error(error);
       throw new InternalServerErrorException();
     }
   }

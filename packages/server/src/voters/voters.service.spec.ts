@@ -2,9 +2,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { VotersService } from './voters.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Voter } from './voter.entity';
-import { Like, QueryFailedError, Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import { CreateVoterDto } from './dto/create-voter.dto';
-import { CanvasserAlreadyHasVoterWithEmailException } from './exceptions/canvasser-already-has-voter-with-email.exception';
 import { UpdateVoterDto } from './dto/update-voter.dto';
 import { ObjectLiteral } from 'typeorm';
 
@@ -77,31 +76,6 @@ describe('VotersService', () => {
       });
       expect(voterRepository.save).toHaveBeenCalledWith(newVoter);
       expect(result).toEqual(newVoter);
-    });
-
-    it('should throw CanvasserAlreadyHasVoterWithEmailException on duplicate email', async () => {
-      // Arrange
-      const createVoterDto: CreateVoterDto = {
-        name: 'Jane Voter',
-        email: 'jane.voter@example.com',
-      };
-      const mockDriverError = {
-        code: 'ER_DUP_ENTRY',
-        name: 'MockDBDriverError',
-        message: 'Simulated duplicate entry database error',
-      };
-      const queryFailedError = new QueryFailedError(
-        'query',
-        [],
-        mockDriverError,
-      );
-
-      voterRepository.save!.mockRejectedValue(queryFailedError);
-
-      // Act & Assert
-      await expect(service.create(createVoterDto, canvasserId)).rejects.toThrow(
-        CanvasserAlreadyHasVoterWithEmailException,
-      );
     });
   });
 

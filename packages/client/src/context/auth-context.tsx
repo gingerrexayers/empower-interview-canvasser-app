@@ -15,7 +15,7 @@ interface AuthContextType {
 interface JwtPayload {
   email: string;
   id: number;
-  name: string; // Added name
+  name: string;
   iat: number;
   exp: number;
 }
@@ -43,7 +43,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           } else {
             // You could fetch user details here if needed
             // For now, we'll just use the decoded token
-            setUser({ id: decoded.id, email: decoded.email, name: decoded.name });
+            setUser({
+              id: decoded.id,
+              email: decoded.email,
+              name: decoded.name,
+            });
           }
         } catch (error) {
           console.error("Invalid token:", error);

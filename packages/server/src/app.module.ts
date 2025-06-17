@@ -10,9 +10,9 @@ import { VotersModule } from './voters/voters.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
-      isGlobal: true, // Makes ConfigModule settings available project-wide
-      envFilePath: '.env', // Specifies the path to your .env file
-      ignoreEnvFile: process.env.NODE_ENV === 'production', // Ignores .env file in production
+      isGlobal: true,
+      envFilePath: '.env',
+      ignoreEnvFile: process.env.NODE_ENV === 'production',
     }),
     TypeOrmModule.forRoot(dataSourceOptions),
     AuthModule,

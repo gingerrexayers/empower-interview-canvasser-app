@@ -24,6 +24,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useCreateVoter } from "@/hooks/use-voters"; // Assuming this hook is created
+import { toast } from "sonner";
 
 // Define the validation schema using Zod
 const voterFormSchema = z.object({
@@ -53,6 +54,7 @@ export function CreateVoterDialog() {
       email: "",
       notes: "",
     },
+    mode: 'onChange', // Add mode for immediate validation
   });
 
   const onSubmit = (values: VoterFormValues) => {
@@ -66,6 +68,22 @@ export function CreateVoterDialog() {
         onSuccess: () => {
           setIsOpen(false); // Close dialog on success
           form.reset(); // Reset form for next use
+          toast.success("Voter created successfully!");
+        },
+        onError: (error: unknown) => {
+          console.error("Failed to create voter:", error);
+          let errorMessage = "An unexpected error occurred. Please try again.";
+          const errorResponseData = (error as { response?: { data?: { message?: string | string[] } } })?.response?.data;
+
+          if (errorResponseData && errorResponseData.message) {
+            if (Array.isArray(errorResponseData.message)) {
+              errorMessage = errorResponseData.message.join("; \n");
+            } else {
+              errorMessage = errorResponseData.message;
+            }
+          }
+          toast.error("Failed to create voter", { description: errorMessage });
+          // Dialog remains open for correction
         },
       }
     );
@@ -139,7 +157,7 @@ export function CreateVoterDialog() {
               >
                 Cancel
               </Button>
-              <Button type="submit" disabled={createVoterMutation.isPending}>
+              <Button type="submit" disabled={createVoterMutation.isPending || !form.formState.isValid}>
                 {createVoterMutation.isPending ? "Saving..." : "Save Voter"}
               </Button>
             </DialogFooter>

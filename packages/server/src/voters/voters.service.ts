@@ -2,8 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateVoterDto } from './dto/create-voter.dto';
 import { Voter } from './voter.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, QueryFailedError, Like } from 'typeorm';
-import { CanvasserAlreadyHasVoterWithEmailException } from './exceptions/canvasser-already-has-voter-with-email.exception';
+import { Repository, Like } from 'typeorm';
 import { UpdateVoterDto } from './dto/update-voter.dto';
 
 @Injectable()
@@ -24,16 +23,7 @@ export class VotersService {
       });
       return await this.voterRepository.save(voter);
     } catch (error) {
-      // catch duplicate entry error
-      if (error instanceof QueryFailedError) {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        if (error.driverError?.code === 'ER_DUP_ENTRY') {
-          throw new CanvasserAlreadyHasVoterWithEmailException(
-            createVoterDto.email,
-          );
-        }
-      }
-      console.log(error);
+      console.error(error);
       throw error;
     }
   }

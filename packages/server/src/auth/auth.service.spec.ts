@@ -126,6 +126,11 @@ describe('AuthService', () => {
     });
 
     it('should throw InternalServerErrorException for other errors', async () => {
+      // Mock console.error for this test to hide the expected error output
+      const consoleErrorSpy = jest
+        .spyOn(console, 'error')
+        .mockImplementation(() => {});
+
       // Arrange
       canvasserRepository.save.mockRejectedValue(new Error('Some other error'));
       (bcrypt.genSalt as jest.Mock).mockResolvedValue(salt);
@@ -135,6 +140,12 @@ describe('AuthService', () => {
       await expect(authService.register(registerDto)).rejects.toThrow(
         InternalServerErrorException,
       );
+      expect(consoleErrorSpy).toHaveBeenCalledWith(
+        new Error('Some other error'),
+      );
+
+      // Restore console.error
+      consoleErrorSpy.mockRestore();
     });
   });
 

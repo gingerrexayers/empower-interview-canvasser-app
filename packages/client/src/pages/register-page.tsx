@@ -28,7 +28,7 @@ const formSchema = z.object({
   email: z.string().email({ message: "Invalid email address." }),
   password: z
     .string()
-    .min(6, { message: "Password must be at least 6 characters." }),
+    .min(8, { message: "Password must be at least 8 characters." }),
 });
 
 export function RegisterPage() {
@@ -37,6 +37,7 @@ export function RegisterPage() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: { name: "", email: "", password: "" },
+    mode: 'onChange', // Validate on input change for immediate feedback
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
@@ -48,10 +49,19 @@ export function RegisterPage() {
       });
       navigate("/login");
     } catch (error: unknown) {
-      console.log(error);
-      const errorMessage =
-        (error as { response: { data: { message: string } } })?.response?.data
-          ?.message || "An unexpected error occurred. Please try again.";
+      console.error(error);
+      let errorMessage = "An unexpected error occurred. Please try again.";
+      const errorResponseData = (error as { response?: { data?: { message?: string | string[] } } })?.response?.data;
+
+      if (errorResponseData && errorResponseData.message) {
+        if (Array.isArray(errorResponseData.message)) {
+          // Join array of messages for display
+          errorMessage = errorResponseData.message.join("; \n");
+        } else {
+          // Use single message string
+          errorMessage = errorResponseData.message;
+        }
+      }
 
       toast.error("Registration Failed", {
         description: errorMessage,
@@ -63,72 +73,75 @@ export function RegisterPage() {
     <div className="flex flex-col min-h-screen bg-muted/40">
       <AppHeader showLogoutButton={false} className="flex-shrink-0" />
       <div className="flex flex-grow items-center justify-center">
-      <Card className="w-full max-w-sm">
-        <CardHeader>
-          <CardTitle className="text-2xl">Sign Up</CardTitle>
-          <CardDescription>Create an account to get started.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-              <FormField
-                control={form.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Name</FormLabel>
-                    <FormControl>
-                      <Input placeholder="John Doe" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email</FormLabel>
-                    <FormControl>
-                      <Input placeholder="name@example.com" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Password</FormLabel>
-                    <FormControl>
-                      <Input type="password" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <Button
-                type="submit"
-                className="w-full"
-                disabled={form.formState.isSubmitting}
+        <Card className="w-full max-w-sm">
+          <CardHeader>
+            <CardTitle className="text-2xl">Sign Up</CardTitle>
+            <CardDescription>Create an account to get started.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Form {...form}>
+              <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="space-y-4"
               >
-                {form.formState.isSubmitting
-                  ? "Creating Account..."
-                  : "Create Account"}
-              </Button>
-            </form>
-          </Form>
-          <div className="mt-4 text-center text-sm">
-            Already have an account?{" "}
-            <Link to="/login" className="underline">
-              Sign in
-            </Link>
-          </div>
-        </CardContent>
-      </Card>
+                <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Name</FormLabel>
+                      <FormControl>
+                        <Input placeholder="John Doe" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Email</FormLabel>
+                      <FormControl>
+                        <Input placeholder="name@example.com" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="password"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Password</FormLabel>
+                      <FormControl>
+                        <Input type="password" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <Button
+                  type="submit"
+                  className="w-full"
+                  disabled={form.formState.isSubmitting || !form.formState.isValid}
+                >
+                  {form.formState.isSubmitting
+                    ? "Creating Account..."
+                    : "Create Account"}
+                </Button>
+              </form>
+            </Form>
+            <div className="mt-4 text-center text-sm">
+              Already have an account?{" "}
+              <Link to="/login" className="underline">
+                Sign in
+              </Link>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );

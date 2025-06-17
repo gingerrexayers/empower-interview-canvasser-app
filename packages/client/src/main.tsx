@@ -14,7 +14,7 @@ createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <BrowserRouter>
       <QueryClientProvider client={queryClient}>
-        <ThemeProvider defaultTheme="light" storageKey="empower-ui-theme">
+        <ThemeProvider>
           <AuthProvider>
             <App />
             <Toaster />
