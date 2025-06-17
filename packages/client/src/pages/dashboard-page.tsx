@@ -78,7 +78,7 @@ export function DashboardPage() {
                   placeholder="Search voters by name or notes..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10 w-full md:w-1/2"
+                  className="pl-10 w-full"
                 />
               </div>
             </div>
