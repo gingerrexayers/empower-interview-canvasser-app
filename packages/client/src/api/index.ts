@@ -24,18 +24,11 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response: AxiosResponse) => response, // Pass through successful responses
   (error: unknown) => {
-    // Start with unknown, then check type
     if (axios.isAxiosError(error)) {
-      // Type guard for AxiosError
-      // error is now typed as AxiosError
-      if (error.response && error.response.status === 401) {
-        // error.config is guaranteed to exist on AxiosError if the request was made
-        if (error.config && !error.config.url?.includes("/auth/login")) {
-          localStorage.removeItem("authToken");
-          window.location.href = "/login";
-        }
-      }
-      return Promise.reject(error); // AxiosError is an instance of Error
+      // The error is an AxiosError. We will pass it along for the calling code to handle.
+      // Specific handling for 401 errors (like triggering logout) will be done
+      // in the React Query hooks or components that initiate the API call.
+      return Promise.reject(error);
     } else {
       // Handle non-Axios errors
       return Promise.reject(new Error(error instanceof Error ? error.message : (typeof error === 'string' ? error : 'An unknown error occurred in the response interceptor')));

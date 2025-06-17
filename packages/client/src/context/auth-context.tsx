@@ -1,28 +1,8 @@
-import { createContext, useState, useEffect, useCallback, type ReactNode } from "react";
+import { useState, useEffect, useCallback, type ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 import type { Canvasser } from "@/types";
 import { jwtDecode } from "jwt-decode";
-
-interface AuthContextType {
-  isAuthenticated: boolean;
-  user: Canvasser | null;
-  token: string | null;
-  login: (token: string) => void;
-  logout: () => void;
-  isLoading: boolean;
-}
-
-interface JwtPayload {
-  email: string;
-  id: number;
-  name: string;
-  iat: number;
-  exp: number;
-}
-
-export const AuthContext = createContext<AuthContextType | undefined>(
-  undefined
-);
+import { AuthContext, type JwtPayload } from "./auth";
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [token, setToken] = useState<string | null>(
