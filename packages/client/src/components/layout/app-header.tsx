@@ -6,9 +6,10 @@ import { cn } from "@/lib/utils";
 
 interface AppHeaderProps {
   className?: string;
+  showLogoutButton?: boolean;
 }
 
-export function AppHeader({ className }: AppHeaderProps) {
+export function AppHeader({ className, showLogoutButton = true }: AppHeaderProps) {
   const { logout } = useAuth();
 
   return (
@@ -39,13 +40,15 @@ export function AppHeader({ className }: AppHeaderProps) {
       </div>
 
       {/* Logout button on the right */}
-      <Button
+      {showLogoutButton && (
+        <Button
         onClick={logout}
         variant="secondary"
         className="bg-primary-foreground text-primary hover:bg-primary-foreground/90"
       >
         Logout
-      </Button>
+        </Button>
+      )}
     </header>
   );
 }

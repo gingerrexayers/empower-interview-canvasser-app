@@ -4,6 +4,7 @@ import { z } from "zod";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner"; // <-- Import toast from sonner
 import api from "@/api";
+import { AppHeader } from "@/components/layout/app-header";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -59,7 +60,9 @@ export function RegisterPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-muted/40">
+    <div className="flex flex-col min-h-screen bg-muted/40">
+      <AppHeader showLogoutButton={false} className="flex-shrink-0" />
+      <div className="flex flex-grow items-center justify-center">
       <Card className="w-full max-w-sm">
         <CardHeader>
           <CardTitle className="text-2xl">Sign Up</CardTitle>
@@ -126,6 +129,7 @@ export function RegisterPage() {
           </div>
         </CardContent>
       </Card>
+      </div>
     </div>
   );
 }
