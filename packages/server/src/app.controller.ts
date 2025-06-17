@@ -1,19 +1,10 @@
 import { Controller, Get, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
-import { AppService } from './app.service';
 
 @Controller()
 export class AppController {
-  constructor(
-    @InjectDataSource() private readonly dataSource: DataSource,
-    private readonly appService: AppService,
-  ) {}
-
-  @Get()
-  getHello(): string {
-    return this.appService.getHello();
-  }
+  constructor(@InjectDataSource() private readonly dataSource: DataSource) {}
 
   @Get('health')
   async checkHealth() {
