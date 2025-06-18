@@ -49,7 +49,7 @@ export function LoginPage() {
         description: "Welcome back!",
       });
     } catch (error) {
-      console.log(error);
+      console.error(error);
       void toast.error("Login Failed", {
         description: "Invalid email or password. Please try again.",
       });

@@ -21,7 +21,7 @@ export class Voter {
   email: string | null;
 
   @Column({ type: 'text', nullable: true })
-  notes: string;
+  notes: string | null;
 
   @Column()
   canvasser_id: number;

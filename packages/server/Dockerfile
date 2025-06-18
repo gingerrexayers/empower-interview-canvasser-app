@@ -8,14 +8,11 @@ RUN npm install -g pnpm@${PNPM_VERSION}
 
 WORKDIR /usr/src/app
 
-# First, copy the server project source.
-# The root .dockerignore will prevent local node_modules from being included.
-COPY packages/server ./packages/server/
-
-# Now, with all the source and package.json files in place,
-# run pnpm install. This becomes the single source of truth for all modules.
-# It will install both prod and dev dependencies for the server.
+# First, install dependencies for the server.
 RUN pnpm install --filter server
+
+# Next, copy the server project source.
+COPY packages/server ./packages/server/
 
 # Run the build. This is needed for the production stage.
 RUN pnpm --filter server run build

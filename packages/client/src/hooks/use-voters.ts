@@ -2,9 +2,11 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import api from "@/api";
 import { type Voter } from "@/types";
 import { toast } from "sonner";
-import { useContext } from "react";
-import { AuthContext } from "@/context/auth";
 import axios from "axios";
+
+interface VoterHooksOptions {
+  onAuthError?: () => void;
+}
 
 export function useVoters(searchTerm?: string) {
   return useQuery<Voter[]>({
@@ -21,10 +23,8 @@ export function useVoters(searchTerm?: string) {
   });
 }
 
-export function useCreateVoter() {
+export function useCreateVoter({ onAuthError }: VoterHooksOptions = {}) {
   const queryClient = useQueryClient();
-  const authContext = useContext(AuthContext);
-  const authLogout = authContext?.logout;
 
   return useMutation({
     mutationFn: (newVoter: Omit<Voter, "id">) =>
@@ -35,12 +35,11 @@ export function useCreateVoter() {
     },
     onError: (error: unknown) => {
       if (axios.isAxiosError(error) && error.response?.status === 401) {
-        if (authLogout) {
-          authLogout();
+        if (onAuthError) {
+          onAuthError();
           void toast.error("Session expired. Please log in again.");
         } else {
-          // Fallback if logout is not available, though unlikely
-          void toast.error("Session expired. Auth context not available.");
+          void toast.error("Authentication error. Please log in again.");
         }
       } else {
         const message =
@@ -52,10 +51,8 @@ export function useCreateVoter() {
   });
 }
 
-export function useUpdateVoterNotes() {
+export function useUpdateVoterNotes({ onAuthError }: VoterHooksOptions = {}) {
   const queryClient = useQueryClient();
-  const authContext = useContext(AuthContext);
-  const authLogout = authContext?.logout;
 
   return useMutation({
     mutationFn: ({ id, notes }: { id: number; notes: string }) =>
@@ -70,11 +67,11 @@ export function useUpdateVoterNotes() {
     },
     onError: (error: unknown) => {
       if (axios.isAxiosError(error) && error.response?.status === 401) {
-        if (authLogout) {
-          authLogout();
+        if (onAuthError) {
+          onAuthError();
           void toast.error("Session expired. Please log in again.");
         } else {
-          void toast.error("Session expired. Auth context not available.");
+          void toast.error("Authentication error. Please log in again.");
         }
       } else {
         const message =

@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
+import { AuthContext } from "@/context/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -45,7 +46,8 @@ type VoterFormValues = z.infer<typeof voterFormSchema>;
 
 export function CreateVoterDialog() {
   const [isOpen, setIsOpen] = useState(false);
-  const createVoterMutation = useCreateVoter();
+  const { logout } = useContext(AuthContext)!;
+  const createVoterMutation = useCreateVoter({ onAuthError: logout });
 
   const form = useForm<VoterFormValues>({
     resolver: zodResolver(voterFormSchema),

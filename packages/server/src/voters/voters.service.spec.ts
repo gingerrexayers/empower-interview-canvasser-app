@@ -173,7 +173,7 @@ describe('VotersService', () => {
 
       const expectedHeader = 'ID,Name,Email,Notes,CreatedAt,UpdatedAt\n';
       const row1 = `${voters[0].id},"${voters[0].name}","${voters[0].email}","${voters[0].notes}",${voters[0].created_at.toISOString()},${voters[0].updated_at.toISOString()}`;
-      const row2 = `${voters[1].id},"${voters[1].name.replace(/"/g, '""')}",,"${voters[1].notes.replace(/"/g, '""')}",${voters[1].created_at.toISOString()},${voters[1].updated_at.toISOString()}`;
+      const row2 = `${voters[1].id},"${voters[1].name.replace(/"/g, '""')}",,"${voters[1].notes?.replace(/"/g, '""')}",${voters[1].created_at.toISOString()},${voters[1].updated_at.toISOString()}`;
       const expectedCsv = expectedHeader + [row1, row2].join('\n');
 
       // Act

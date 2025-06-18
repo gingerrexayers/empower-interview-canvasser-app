@@ -7,6 +7,7 @@ import { JwtService } from '@nestjs/jwt';
 import { UpdateVoterDto } from './dto/update-voter.dto';
 import { CreateVoterDto } from './dto/create-voter.dto';
 import { Response } from 'express';
+import { validate } from 'class-validator';
 
 describe('VotersController', () => {
   let controller: VotersController;
@@ -206,5 +207,28 @@ describe('VotersController', () => {
       );
       expect(mockResponse.send).toHaveBeenCalledWith(mockCsvData);
     });
+  });
+});
+
+describe('UpdateVoterDto Validation', () => {
+  it('should pass validation with valid data', async () => {
+    const dto = new UpdateVoterDto();
+    dto.name = 'Valid Name';
+    const errors = await validate(dto);
+    expect(errors.length).toBe(0);
+  });
+
+  it('should fail validation if name is an empty string', async () => {
+    const dto = new UpdateVoterDto();
+    dto.name = '';
+    const errors = await validate(dto);
+    expect(errors.length).toBeGreaterThan(0);
+    expect(errors[0].constraints).toHaveProperty('isNotEmpty');
+  });
+
+  it('should pass validation if name is undefined (optional)', async () => {
+    const dto = new UpdateVoterDto();
+    const errors = await validate(dto);
+    expect(errors.length).toBe(0);
   });
 });
