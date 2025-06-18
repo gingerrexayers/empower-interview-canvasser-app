@@ -77,7 +77,9 @@ export function RegisterPage() {
       <div className="flex flex-grow items-center justify-center">
         <Card className="w-full max-w-sm">
           <CardHeader>
-            <CardTitle className="text-2xl">Sign Up</CardTitle>
+            <CardTitle className="text-2xl" data-cy="register-title">
+              Sign Up
+            </CardTitle>
             <CardDescription>Create an account to get started.</CardDescription>
           </CardHeader>
           <CardContent>
@@ -93,7 +95,11 @@ export function RegisterPage() {
                     <FormItem>
                       <FormLabel>Name</FormLabel>
                       <FormControl>
-                        <Input placeholder="John Doe" {...field} />
+                        <Input
+                          placeholder="John Doe"
+                          {...field}
+                          data-cy="register-name-input"
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -106,7 +112,11 @@ export function RegisterPage() {
                     <FormItem>
                       <FormLabel>Email</FormLabel>
                       <FormControl>
-                        <Input placeholder="name@example.com" {...field} />
+                        <Input
+                          placeholder="name@example.com"
+                          {...field}
+                          data-cy="register-email-input"
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -119,13 +129,18 @@ export function RegisterPage() {
                     <FormItem>
                       <FormLabel>Password</FormLabel>
                       <FormControl>
-                        <Input type="password" {...field} />
+                        <Input
+                          type="password"
+                          {...field}
+                          data-cy="register-password-input"
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
                 <Button
+                  data-cy="register-submit-button"
                   type="submit"
                   className="w-full"
                   disabled={

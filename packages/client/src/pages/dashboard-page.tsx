@@ -44,7 +44,7 @@ export function DashboardPage() {
       <div className="flex-grow overflow-y-auto container mx-auto p-4 md:p-8">
         <Card className="flex flex-col h-full">
           <CardHeader className="grid grid-cols-[1fr_auto] lg:grid-cols-[auto_1fr_auto] gap-x-4 gap-y-3 p-4 items-center flex-shrink-0">
-            <CardTitle>Your Voters</CardTitle>
+            <CardTitle data-cy="dashboard-title">Your Voters</CardTitle>
 
             <div className="w-full col-span-2 lg:col-span-1 lg:col-start-2 lg:row-start-1">
               <div className="relative w-full lg:max-w-md lg:mx-auto">
@@ -55,6 +55,7 @@ export function DashboardPage() {
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="pl-10 w-full"
+                  data-cy="search-voters-input"
                 />
               </div>
             </div>
@@ -65,6 +66,7 @@ export function DashboardPage() {
                 onClick={() => {
                   void handleExportCsv();
                 }}
+                data-cy="export-csv-button"
               >
                 <Download className="mr-2 h-4 w-4" />
                 <span className="hidden sm:inline">Export CSV</span>

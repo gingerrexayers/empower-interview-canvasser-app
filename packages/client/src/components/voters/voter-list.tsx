@@ -52,7 +52,7 @@ export function VoterList({ voters }: VoterListProps) {
   }
 
   return (
-    <Table className="w-full">
+    <Table className="w-full" data-cy="voters-table">
       <TableHeader className="sm:sticky sm:top-0 sm:z-10 sm:bg-card">
         <TableRow className="hidden sm:table-row">
           <TableHead className="w-[250px]">Voter</TableHead>
@@ -64,11 +64,18 @@ export function VoterList({ voters }: VoterListProps) {
         {voters.map((voter) => {
           const isEditing = editingVoterId === voter.id;
           return (
-            <TableRow key={voter.id} className="flex flex-wrap items-start sm:table-row border-b sm:border-b-0 last:border-b-0">
+            <TableRow
+              key={voter.id}
+              className="flex flex-wrap items-start sm:table-row border-b sm:border-b-0 last:border-b-0"
+              data-cy={`voter-row-${voter.id}`}
+            >
               {/* Voter Info Cell */}
               <TableCell className="w-full xs:w-auto xs:pr-2 sm:w-[250px] sm:pr-4 sm:table-cell font-medium py-2 px-4 sm:py-4">
-                <div>{voter.name}</div>
-                <div className="text-sm text-muted-foreground">
+                <div data-cy={`voter-name-${voter.id}`}>{voter.name}</div>
+                <div
+                  className="text-sm text-muted-foreground"
+                  data-cy={`voter-email-${voter.id}`}
+                >
                   {voter.email}
                 </div>
               </TableCell>
@@ -82,9 +89,13 @@ export function VoterList({ voters }: VoterListProps) {
                     className="w-full break-all"
                     rows={3}
                     disabled={updateNotesMutation.isPending}
+                    data-cy={`voter-notes-input-${voter.id}`}
                   />
                 ) : (
-                  <p className="whitespace-normal break-words">
+                  <p
+                    className="whitespace-normal break-words"
+                    data-cy={`voter-notes-text-${voter.id}`}
+                  >
                     {voter.notes || (
                       <span className="text-muted-foreground">No notes</span>
                     )}
@@ -100,6 +111,7 @@ export function VoterList({ voters }: VoterListProps) {
                       <Button
                         size="sm"
                         onClick={() => handleSaveClick(voter.id)}
+                        data-cy={`voter-save-notes-button-${voter.id}`}
                         disabled={updateNotesMutation.isPending}
                         className="w-full xs:w-auto"
                       >
@@ -110,6 +122,7 @@ export function VoterList({ voters }: VoterListProps) {
                         variant="ghost"
                         size="sm"
                         onClick={handleCancelClick}
+                        data-cy={`voter-cancel-edit-button-${voter.id}`}
                         disabled={updateNotesMutation.isPending}
                         className="w-full xs:w-auto"
                       >
@@ -123,6 +136,7 @@ export function VoterList({ voters }: VoterListProps) {
                         variant="outline"
                         size="sm"
                         onClick={() => handleEditClick(voter)}
+                        data-cy={`voter-edit-notes-button-${voter.id}`}
                         className="w-full xs:w-auto"
                       >
                         <Pencil className="h-4 w-4" />

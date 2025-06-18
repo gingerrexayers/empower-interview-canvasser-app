@@ -62,7 +62,9 @@ export function LoginPage() {
       <div className="flex flex-grow items-center justify-center">
         <Card className="w-full max-w-sm">
           <CardHeader>
-            <CardTitle className="text-2xl">Login</CardTitle>
+            <CardTitle className="text-2xl" data-cy="login-title">
+              Login
+            </CardTitle>
             <CardDescription>
               Enter your email below to login to your account.
             </CardDescription>
@@ -80,7 +82,11 @@ export function LoginPage() {
                     <FormItem>
                       <FormLabel>Email</FormLabel>
                       <FormControl>
-                        <Input placeholder="name@example.com" {...field} />
+                        <Input
+                          placeholder="name@example.com"
+                          {...field}
+                          data-cy="login-email-input"
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -93,13 +99,18 @@ export function LoginPage() {
                     <FormItem>
                       <FormLabel>Password</FormLabel>
                       <FormControl>
-                        <Input type="password" {...field} />
+                        <Input
+                          type="password"
+                          {...field}
+                          data-cy="login-password-input"
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
                 <Button
+                  data-cy="login-submit-button"
                   type="submit"
                   className="w-full"
                   disabled={

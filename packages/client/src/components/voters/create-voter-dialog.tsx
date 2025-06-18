@@ -54,7 +54,7 @@ export function CreateVoterDialog() {
       email: "",
       notes: "",
     },
-    mode: 'onChange', // Add mode for immediate validation
+    mode: "onChange", // Add mode for immediate validation
   });
 
   const onSubmit = (values: VoterFormValues) => {
@@ -73,7 +73,9 @@ export function CreateVoterDialog() {
         onError: (error: unknown) => {
           console.error("Failed to create voter:", error);
           let errorMessage = "An unexpected error occurred. Please try again.";
-          const errorResponseData = (error as { response?: { data?: { message?: string | string[] } } })?.response?.data;
+          const errorResponseData = (
+            error as { response?: { data?: { message?: string | string[] } } }
+          )?.response?.data;
 
           if (errorResponseData && errorResponseData.message) {
             if (Array.isArray(errorResponseData.message)) {
@@ -92,7 +94,7 @@ export function CreateVoterDialog() {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button>
+        <Button data-cy="add-voter-button">
           <PlusCircle className="mr-2 h-4 w-4" />
           <span className="hidden sm:inline">Add Voter</span>
           <span className="sm:hidden">Add</span>
@@ -100,7 +102,9 @@ export function CreateVoterDialog() {
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Create New Voter</DialogTitle>
+          <DialogTitle data-cy="create-voter-dialog-title">
+            Create New Voter
+          </DialogTitle>
           <DialogDescription>
             Fill in the details to add a new voter. Click save when you're done.
           </DialogDescription>
@@ -117,7 +121,11 @@ export function CreateVoterDialog() {
                 <FormItem>
                   <FormLabel>Name</FormLabel>
                   <FormControl>
-                    <Input placeholder="Voter's full name" {...field} />
+                    <Input
+                      placeholder="Voter's full name"
+                      {...field}
+                      data-cy="create-voter-name-input"
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -130,7 +138,11 @@ export function CreateVoterDialog() {
                 <FormItem>
                   <FormLabel>Email (Optional)</FormLabel>
                   <FormControl>
-                    <Input placeholder="voter@example.com" {...field} />
+                    <Input
+                      placeholder="voter@example.com"
+                      {...field}
+                      data-cy="create-voter-email-input"
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -143,7 +155,11 @@ export function CreateVoterDialog() {
                 <FormItem>
                   <FormLabel>Notes (Optional)</FormLabel>
                   <FormControl>
-                    <Textarea placeholder="Any relevant notes..." {...field} />
+                    <Textarea
+                      placeholder="Any relevant notes..."
+                      {...field}
+                      data-cy="create-voter-notes-textarea"
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -154,10 +170,17 @@ export function CreateVoterDialog() {
                 type="button"
                 variant="outline"
                 onClick={() => setIsOpen(false)}
+                data-cy="create-voter-cancel-button"
               >
                 Cancel
               </Button>
-              <Button type="submit" disabled={createVoterMutation.isPending || !form.formState.isValid}>
+              <Button
+                type="submit"
+                disabled={
+                  createVoterMutation.isPending || !form.formState.isValid
+                }
+                data-cy="create-voter-save-button"
+              >
                 {createVoterMutation.isPending ? "Saving..." : "Save Voter"}
               </Button>
             </DialogFooter>
