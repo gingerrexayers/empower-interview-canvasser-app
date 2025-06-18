@@ -1,7 +1,5 @@
-import { useAuth } from "@/hooks/use-auth";
+import { useAuth } from "@/context/auth-context";
 import { Button } from "@/components/ui/button";
-import logo from "@/assets/EmpowerProject_Logo.png";
-import favicon from "@/assets/favicon.png";
 import { cn } from "@/lib/utils";
 
 interface AppHeaderProps {
@@ -9,20 +7,28 @@ interface AppHeaderProps {
   showLogoutButton?: boolean;
 }
 
-export function AppHeader({ className, showLogoutButton = true }: AppHeaderProps) {
+export function AppHeader({
+  className,
+  showLogoutButton = true,
+}: AppHeaderProps) {
   const { logout } = useAuth();
 
   return (
-    <header className={cn("relative flex items-center justify-between bg-primary p-4 px-4 md:px-8", className)}>
+    <header
+      className={cn(
+        "relative flex items-center justify-between bg-primary p-4 px-4 md:px-8",
+        className
+      )}
+    >
       {/* Logo on the left */}
       <div className="flex items-center">
         <img
-          src={logo}
+          src="/EmpowerProject_Logo.png"
           alt="Empower Project Logo"
           className="mr-3 hidden h-10 w-auto md:block"
         />
         <img
-          src={favicon}
+          src="/favicon.png"
           alt="Empower Project Logo Small"
           className="mr-3 block h-8 w-8 md:hidden"
         />
@@ -42,11 +48,11 @@ export function AppHeader({ className, showLogoutButton = true }: AppHeaderProps
       {/* Logout button on the right */}
       {showLogoutButton && (
         <Button
-        onClick={logout}
-        variant="secondary"
-        className="bg-primary-foreground text-primary hover:bg-primary-foreground/90"
-      >
-        Logout
+          onClick={logout}
+          variant="secondary"
+          className="bg-primary-foreground text-primary hover:bg-primary-foreground/90"
+        >
+          Logout
         </Button>
       )}
     </header>

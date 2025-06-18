@@ -8,6 +8,11 @@ RUN npm install -g pnpm@${PNPM_VERSION}
 
 WORKDIR /usr/src/app
 
+COPY pnpm-lock.yaml ./
+COPY package.json ./
+COPY pnpm-workspace.yaml ./
+COPY packages/server/package.json ./packages/server/
+
 # First, install dependencies for the server.
 RUN pnpm install --filter server
 

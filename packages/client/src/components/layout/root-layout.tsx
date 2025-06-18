@@ -1,10 +1,14 @@
-import { Outlet } from "react-router-dom";
+import type { ComponentChildren } from "preact";
 import { Toaster } from "@/components/ui/sonner";
 
-export function RootLayout() {
+interface RootLayoutProps {
+  children: ComponentChildren;
+}
+
+export function RootLayout({ children }: RootLayoutProps) {
   return (
     <main className="min-h-screen bg-background text-foreground">
-      <Outlet />
+      {children}
       <Toaster />
     </main>
   );

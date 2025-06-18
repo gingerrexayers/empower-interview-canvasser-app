@@ -1,7 +1,9 @@
-import { useEffect } from "react";
+import { useEffect } from "preact/hooks";
+
+import type { ComponentChildren } from "preact";
 
 type ThemeProviderProps = {
-  children: React.ReactNode;
+  children: ComponentChildren;
 };
 
 // This component now only sets the light theme and does not provide a context.

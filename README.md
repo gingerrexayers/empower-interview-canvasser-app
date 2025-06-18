@@ -1,11 +1,11 @@
 # Empower Canvasser App
 
 [![Tech: NestJS](https://img.shields.io/badge/Backend-NestJS-ea2845?style=flat-square&logo=nestjs)](https://nestjs.com/)
-[![Tech: React](https://img.shields.io/badge/Frontend-React-61DAFB?style=flat-square&logo=react)](https://react.dev/)
+[![Tech: Preact](https://img.shields.io/badge/Preact-673AB8?logo=preact&logoColor=fff)](https://preactjs.com/)
 [![Tech: Docker](https://img.shields.io/badge/Container-Docker-2496ED?style=flat-square&logo=docker)](https://www.docker.com/)
 [![Built with: pnpm](https://img.shields.io/badge/Built%20with-pnpm-f69220?style=flat-square&logo=pnpm)](https://pnpm.io/)
 
-Empower Canvasser App is a full-stack monorepo application designed to help political canvassers manage and track their list of voters. It features a modern, responsive frontend built with React and a robust, scalable backend powered by NestJS.
+Empower Canvasser App is a full-stack monorepo application designed to help political canvassers manage and track their list of voters. It features a modern, responsive frontend built with Preact and a robust, scalable backend powered by NestJS. You can access the production deployment at [empower-canvasser-app](https://empower-canvasser.up.railway.app/).
 
 ## ✨ Features
 
@@ -18,7 +18,7 @@ Empower Canvasser App is a full-stack monorepo application designed to help poli
   - Edit voter notes inline.
 - **Data Export:** Export the voter list to a CSV file.
 - **Modern UI/UX:**
-  - Built with React, Vite, and TypeScript.
+  - Built with Preact, Vite, and TypeScript.
   - Styled with Tailwind CSS and shadcn/ui components.
   - Responsive design for both desktop and mobile use.
 - **Scalable Backend:**
@@ -31,15 +31,15 @@ Empower Canvasser App is a full-stack monorepo application designed to help poli
 
 | Category           | Technology                                                                                                             |
 | ------------------ | ---------------------------------------------------------------------------------------------------------------------- |
-| **Frontend**       | [React](https://react.dev/), [Vite](https://vitejs.dev/), [TypeScript](https://www.typescriptlang.org/)                |
+| **Frontend**       | [Preact](https://preactjs.com/), [Vite](https://vitejs.dev/), [TypeScript](https://www.typescriptlang.org/)            |
 | **UI Components**  | [shadcn/ui](https://ui.shadcn.com/), [Tailwind CSS](https://tailwindcss.com/), [Sonner](https://sonner.emilkowal.ski/) |
 | **Data Fetching**  | [TanStack Query](https://tanstack.com/query/latest)                                                                    |
-| **Forms**          | [React Hook Form](https://react-hook-form.com/), [Zod](https://zod.dev/)                                               |
-| **Routing**        | [React Router](https://reactrouter.com/)                                                                               |
+| **Forms**          | [React Hook Form](https://react-hook-form.com/), [Valibot](https://valibot.dev/)                                       |
+| **Routing**        | [Preact ISO](https://github.com/preactjs/preact-iso)                                                                   |
 | **Backend**        | [NestJS](https://nestjs.com/)                                                                                          |
 | **Database**       | [MySQL](https://www.mysql.com/), [TypeORM](https://typeorm.io/)                                                        |
 | **Authentication** | [@nestjs/jwt](https://github.com/nestjs/jwt)                                                                           |
-| **Testing**        | [Jest](https://jestjs.io/), [Cypress](https://www.cypress.io/)                                                          |
+| **Testing**        | [Jest](https://jestjs.io/), [Cypress](https://www.cypress.io/)                                                         |
 | **DevOps**         | [Docker](https://www.docker.com/), [Nginx](https://www.nginx.com/), [Railway](https://railway.app/)                    |
 | **Tooling**        | [pnpm](https://pnpm.io/), [ESLint](https://eslint.org/), [Prettier](https://prettier.io/)                              |
 
@@ -50,7 +50,7 @@ This project is a monorepo managed with `pnpm` workspaces.
 ```
 /
 ├── packages/
-│   ├── client/       # React (Vite) Frontend
+│   ├── client/       # Preact (Vite) Frontend
 │   └── server/       # NestJS Backend
 ├── docker-compose.yaml # Production Docker services
 ├── docker-compose.dev.yaml # Development Docker services

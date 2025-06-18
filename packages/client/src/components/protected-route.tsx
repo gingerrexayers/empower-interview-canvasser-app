@@ -1,12 +1,23 @@
-import { Navigate, Outlet } from "react-router-dom";
-import { useAuth } from "@/hooks/use-auth";
+import { useLocation } from "preact-iso";
+import type { ComponentType } from "preact";
+import { useAuth } from "@/context/auth-context";
 
-export function ProtectedRoute() {
+interface ProtectedRouteProps {
+  path: string;
+  component: ComponentType<object>;
+}
+
+export function ProtectedRoute({
+  component: ComponentToRender,
+}: ProtectedRouteProps) {
   const { isAuthenticated } = useAuth();
 
-  // isLoading has been removed from AuthContext.
-  // If token is initially null, isAuthenticated will be false, leading to /login.
-  // Once token is loaded and valid, isAuthenticated becomes true, rendering Outlet.
+  const location = useLocation();
 
-  return isAuthenticated ? <Outlet /> : <Navigate to="/login" replace />;
+  if (!isAuthenticated) {
+    location.route("/login", true);
+    return null;
+  }
+
+  return <ComponentToRender />;
 }

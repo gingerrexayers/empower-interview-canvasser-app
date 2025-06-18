@@ -1,10 +1,7 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { Link, useNavigate } from "react-router-dom";
-import { toast } from "sonner"; // <-- Import toast from sonner
-import { useAuth } from "@/hooks/use-auth";
+import { useLocation } from "preact-iso";
+import { toast } from "sonner";
 import api from "@/api";
+import { useAuth } from "@/context/auth-context";
 import { AppHeader } from "@/components/layout/app-header";
 import { Button } from "@/components/ui/button";
 import {
@@ -23,35 +20,68 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { useForm, useFormContext } from "react-hook-form";
+import { valibotResolver } from "@hookform/resolvers/valibot";
+import * as v from "valibot";
 
-const formSchema = z.object({
-  email: z.string().email({ message: "Invalid email address." }),
-  password: z.string().min(1, { message: "Password is required." }),
+const formSchema = v.object({
+  email: v.pipe(
+    v.string("Email must be a string."),
+    v.email("Invalid email address.")
+  ),
+  password: v.pipe(
+    v.string("Password must be a string."),
+    v.minLength(1, "Password is required.") // Keep this for login, 8 chars for register
+  ),
 });
 
-export function LoginPage() {
-  const { login } = useAuth();
-  const navigate = useNavigate();
+// Type for our form values, inferred from formSchema
+type FormValues = v.InferOutput<typeof formSchema>;
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: { email: "", password: "" },
+function LoginButton() {
+  const { formState } = useFormContext<FormValues>();
+  const { isSubmitting, isValid } = formState;
+
+  return (
+    <Button
+      data-cy="login-submit-button"
+      type="submit"
+      className="w-full"
+      disabled={isSubmitting || !isValid}
+    >
+      {isSubmitting ? "Logging in..." : "Login"}
+    </Button>
+  );
+}
+
+export function LoginPage() {
+  const location = useLocation();
+  const { login } = useAuth();
+
+  const form = useForm<FormValues>({
+    resolver: valibotResolver(formSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
     mode: "onChange",
   });
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: FormValues) {
     try {
-      const response = await api.post<{ token: string }>("/auth/login", values);
-      login(response.data.token);
-      void navigate("/dashboard");
-
-      void toast.success("Login Successful", {
-        description: "Welcome back!",
-      });
+      const response = await api.post<{ access_token: string }>(
+        "/auth/login",
+        values
+      );
+      login(response.data.access_token);
+      location.route("/dashboard", true);
+      toast.success("Login Successful");
     } catch (error) {
       console.error(error);
-      void toast.error("Login Failed", {
-        description: "Invalid email or password. Please try again.",
+      toast.error("Login Failed", {
+        description:
+          (error as any)?.response?.data?.message ||
+          "Invalid email or password. Please try again.",
       });
     }
   }
@@ -72,19 +102,22 @@ export function LoginPage() {
           <CardContent>
             <Form {...form}>
               <form
-                onSubmit={(e) => void form.handleSubmit(onSubmit)(e)}
+                onSubmit={form.handleSubmit(onSubmit)}
                 className="space-y-4"
+                noValidate // Prevent browser validation, RHF handles it
               >
                 <FormField
                   control={form.control}
                   name="email"
-                  render={({ field }) => (
+                  render={({ field, fieldState }) => (
                     <FormItem>
                       <FormLabel>Email</FormLabel>
                       <FormControl>
                         <Input
+                          {...field} // Spread field props
+                          type="email"
                           placeholder="name@example.com"
-                          {...field}
+                          aria-invalid={!!fieldState.error}
                           data-cy="login-email-input"
                         />
                       </FormControl>
@@ -95,13 +128,14 @@ export function LoginPage() {
                 <FormField
                   control={form.control}
                   name="password"
-                  render={({ field }) => (
+                  render={({ field, fieldState }) => (
                     <FormItem>
                       <FormLabel>Password</FormLabel>
                       <FormControl>
                         <Input
+                          {...field} // Spread field props
                           type="password"
-                          {...field}
+                          aria-invalid={!!fieldState.error}
                           data-cy="login-password-input"
                         />
                       </FormControl>
@@ -109,23 +143,14 @@ export function LoginPage() {
                     </FormItem>
                   )}
                 />
-                <Button
-                  data-cy="login-submit-button"
-                  type="submit"
-                  className="w-full"
-                  disabled={
-                    form.formState.isSubmitting || !form.formState.isValid
-                  }
-                >
-                  {form.formState.isSubmitting ? "Signing In..." : "Sign In"}
-                </Button>
+                <LoginButton />
               </form>
             </Form>
             <div className="mt-4 text-center text-sm">
-              Don't have an account?{" "}
-              <Link to="/register" className="underline">
+              Don&apos;t have an account?{" "}
+              <a href="/register" className="underline">
                 Sign up
-              </Link>
+              </a>
             </div>
           </CardContent>
         </Card>

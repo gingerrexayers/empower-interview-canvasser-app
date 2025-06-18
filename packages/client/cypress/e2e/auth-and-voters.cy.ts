@@ -10,7 +10,7 @@ describe("Registration Form Validation", () => {
     cy.get('[data-cy="register-submit-button"]').should("be.disabled");
 
     // Name field validation
-    cy.get('[data-cy="register-name-input"]').type("J").blur(); // Min 2 chars, so 'J' is invalid by current zod
+    cy.get('[data-cy="register-name-input"]').type("J").blur(); // Min 2 chars, so 'J' is invalid by current valibot
     cy.contains("Name must be at least 2 characters.").should("be.visible");
     cy.get('[data-cy="register-submit-button"]').should("be.disabled");
     cy.get('[data-cy="register-name-input"]').clear().type("John Doe").blur();

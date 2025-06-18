@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useAuth } from "@/hooks/use-auth";
+import { useState } from "preact/hooks";
+import { useAuth } from "@/context/auth-context";
 import type { Voter } from "@/types";
 import { useUpdateVoterNotes } from "@/hooks/use-voters"; // Assuming this hook is created
 import { Button } from "@/components/ui/button";
@@ -13,6 +13,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Pencil, Save, XCircle } from "lucide-react";
+import type { JSX } from "preact";
 
 interface VoterListProps {
   voters: Voter[];
@@ -87,10 +88,10 @@ export function VoterList({ voters }: VoterListProps) {
                 {isEditing ? (
                   <Textarea
                     value={editingNotes}
-                    onChange={(e) => setEditingNotes(e.target.value)}
+                    onChange={(e: JSX.TargetedEvent<HTMLTextAreaElement, Event>) => setEditingNotes((e.target as HTMLTextAreaElement).value)}
                     className="w-full break-all"
                     rows={3}
-                    disabled={updateNotesMutation.isPending}
+                    disabled={updateNotesMutation.isLoading}
                     data-cy={`voter-notes-input-${voter.id}`}
                   />
                 ) : (
@@ -114,7 +115,7 @@ export function VoterList({ voters }: VoterListProps) {
                         size="sm"
                         onClick={() => handleSaveClick(voter.id)}
                         data-cy={`voter-save-notes-button-${voter.id}`}
-                        disabled={updateNotesMutation.isPending}
+                        disabled={updateNotesMutation.isLoading}
                         className="w-full xs:w-auto"
                       >
                         <Save className="h-4 w-4" />
@@ -125,7 +126,7 @@ export function VoterList({ voters }: VoterListProps) {
                         size="sm"
                         onClick={handleCancelClick}
                         data-cy={`voter-cancel-edit-button-${voter.id}`}
-                        disabled={updateNotesMutation.isPending}
+                        disabled={updateNotesMutation.isLoading}
                         className="w-full xs:w-auto"
                       >
                         <XCircle className="h-4 w-4" />

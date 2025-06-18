@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "preact/hooks";
+import type { ChangeEvent } from "preact/compat";
 import { useVoters } from "@/hooks/use-voters";
 import { useDebounce } from "@/hooks/use-debounce";
 import api from "@/api";
@@ -13,6 +14,32 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export function DashboardPage() {
+  useEffect(() => {
+    const handleClickCapture = (event: MouseEvent) => {
+      const targetElement = event.target as HTMLElement;
+      const anchorElement = targetElement.closest(
+        'a[data-download-link="true"]'
+      );
+
+      if (
+        anchorElement &&
+        anchorElement.getAttribute("href")?.startsWith("blob:")
+      ) {
+        event.stopPropagation();
+        // We specifically DO NOT call event.preventDefault() here,
+        // as we want the default browser action (downloading the blob) to proceed.
+      }
+    };
+
+    document.addEventListener("click", handleClickCapture, { capture: true });
+
+    return () => {
+      document.removeEventListener("click", handleClickCapture, {
+        capture: true,
+      });
+    };
+  }, []); // Empty dependency array ensures this runs only once on mount/unmount
+
   const [searchTerm, setSearchTerm] = useState("");
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
   const { data: voters, isLoading, isError } = useVoters(debouncedSearchTerm);
@@ -27,10 +54,17 @@ export function DashboardPage() {
       const link = document.createElement("a");
       link.href = url;
       link.setAttribute("download", "voters.csv");
+      link.setAttribute("target", "_blank"); // Prevent router interference
+      link.setAttribute("rel", "external"); // Further hint for router to ignore this link
+      link.setAttribute("native", ""); // Tell preact-iso/router to ignore this link
+      link.setAttribute("data-download-link", "true"); // Custom attribute for our capture listener
       document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      window.URL.revokeObjectURL(url);
+
+      setTimeout(() => {
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+      }, 0);
       toast.success("Voter data exported successfully!");
     } catch (error) {
       console.error("Failed to export CSV:", error);
@@ -53,7 +87,9 @@ export function DashboardPage() {
                   type="search"
                   placeholder="Search voters..."
                   value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
+                  onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                    setSearchTerm((e.target as HTMLInputElement).value)
+                  }
                   className="pl-10 w-full"
                   data-cy="search-voters-input"
                 />

@@ -1,4 +1,4 @@
-import * as React from "react";
+import * as React from "preact/compat";
 import {
   useFormContext,
   useFormState,
@@ -9,7 +9,7 @@ import {
 // ========= FormFieldContext =========
 export type FormFieldContextValue<
   TFieldValues extends FieldValues = FieldValues,
-  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
 > = {
   name: TName;
 };

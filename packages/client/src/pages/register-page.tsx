@@ -1,8 +1,6 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { Link, useNavigate } from "react-router-dom";
-import { toast } from "sonner"; // <-- Import toast from sonner
+import * as v from "valibot";
+import { useLocation } from "preact-iso";
+import { toast } from "sonner";
 import api from "@/api";
 import { AppHeader } from "@/components/layout/app-header";
 import { Button } from "@/components/ui/button";
@@ -20,34 +18,66 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
+} from "@/components/ui/form"; // Updated import
 import { Input } from "@/components/ui/input";
+import { useForm, useFormContext } from "react-hook-form"; // Added import
+import { valibotResolver } from "@hookform/resolvers/valibot"; // Added import
 
-const formSchema = z.object({
-  name: z.string().min(2, { message: "Name must be at least 2 characters." }),
-  email: z.string().email({ message: "Invalid email address." }),
-  password: z
-    .string()
-    .min(8, { message: "Password must be at least 8 characters." }),
+const formSchema = v.object({
+  name: v.pipe(
+    v.string("Name must be a string."),
+    v.minLength(2, "Name must be at least 2 characters.")
+  ),
+  email: v.pipe(
+    v.string("Email must be a string."),
+    v.email("Invalid email address.")
+  ),
+  password: v.pipe(
+    v.string("Password must be a string."),
+    v.minLength(8, "Password must be at least 8 characters.")
+  ),
 });
 
-export function RegisterPage() {
-  const navigate = useNavigate();
+// Type for our form values, inferred from formSchema
+type FormValues = v.InferOutput<typeof formSchema>;
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: { name: "", email: "", password: "" },
-    mode: "onChange", // Validate on input change for immediate feedback
+function SubmitButton() {
+  const { formState } = useFormContext<FormValues>(); // Use useFormContext
+  const { isSubmitting, isValid } = formState;
+
+  return (
+    <Button
+      data-cy="register-submit-button"
+      type="submit"
+      className="w-full"
+      disabled={isSubmitting || !isValid} // Access .value is not needed for RHF state
+    >
+      {isSubmitting ? "Creating Account..." : "Create Account"}
+    </Button>
+  );
+}
+
+export function RegisterPage() {
+  const location = useLocation();
+
+  const form = useForm<FormValues>({
+    resolver: valibotResolver(formSchema),
+    defaultValues: {
+      name: "",
+      email: "",
+      password: "",
+    },
+    mode: "onChange",
   });
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: FormValues) {
     try {
       await api.post("/auth/register", values);
 
       void toast.success("Registration Successful", {
         description: "You can now log in with your credentials.",
       });
-      await navigate("/login");
+      location.route("/login", true);
     } catch (error: unknown) {
       void console.error(error);
       let errorMessage = "An unexpected error occurred. Please try again.";
@@ -57,10 +87,8 @@ export function RegisterPage() {
 
       if (errorResponseData && errorResponseData.message) {
         if (Array.isArray(errorResponseData.message)) {
-          // Join array of messages for display
           errorMessage = errorResponseData.message.join("; \n");
         } else {
-          // Use single message string
           errorMessage = errorResponseData.message;
         }
       }
@@ -84,20 +112,24 @@ export function RegisterPage() {
           </CardHeader>
           <CardContent>
             <Form {...form}>
+              {" "}
+              {/* Spread form methods here */}
               <form
-                onSubmit={(e) => void form.handleSubmit(onSubmit)(e)}
+                onSubmit={form.handleSubmit(onSubmit)}
                 className="space-y-4"
+                noValidate // Prevent browser validation, RHF handles it
               >
                 <FormField
                   control={form.control}
                   name="name"
-                  render={({ field }) => (
+                  render={({ field, fieldState }) => (
                     <FormItem>
                       <FormLabel>Name</FormLabel>
                       <FormControl>
                         <Input
-                          placeholder="John Doe"
-                          {...field}
+                          {...field} // Spread field props (value, onChange, onBlur, ref)
+                          placeholder="Your full name"
+                          aria-invalid={!!fieldState.error}
                           data-cy="register-name-input"
                         />
                       </FormControl>
@@ -108,13 +140,15 @@ export function RegisterPage() {
                 <FormField
                   control={form.control}
                   name="email"
-                  render={({ field }) => (
+                  render={({ field, fieldState }) => (
                     <FormItem>
                       <FormLabel>Email</FormLabel>
                       <FormControl>
                         <Input
-                          placeholder="name@example.com"
                           {...field}
+                          type="email"
+                          placeholder="name@example.com"
+                          aria-invalid={!!fieldState.error}
                           data-cy="register-email-input"
                         />
                       </FormControl>
@@ -125,13 +159,14 @@ export function RegisterPage() {
                 <FormField
                   control={form.control}
                   name="password"
-                  render={({ field }) => (
+                  render={({ field, fieldState }) => (
                     <FormItem>
                       <FormLabel>Password</FormLabel>
                       <FormControl>
                         <Input
-                          type="password"
                           {...field}
+                          type="password"
+                          aria-invalid={!!fieldState.error}
                           data-cy="register-password-input"
                         />
                       </FormControl>
@@ -139,25 +174,14 @@ export function RegisterPage() {
                     </FormItem>
                   )}
                 />
-                <Button
-                  data-cy="register-submit-button"
-                  type="submit"
-                  className="w-full"
-                  disabled={
-                    form.formState.isSubmitting || !form.formState.isValid
-                  }
-                >
-                  {form.formState.isSubmitting
-                    ? "Creating Account..."
-                    : "Create Account"}
-                </Button>
+                <SubmitButton />
               </form>
             </Form>
             <div className="mt-4 text-center text-sm">
               Already have an account?{" "}
-              <Link to="/login" className="underline">
+              <a href="/login" className="underline">
                 Sign in
-              </Link>
+              </a>
             </div>
           </CardContent>
         </Card>

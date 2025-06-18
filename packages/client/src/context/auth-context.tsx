@@ -1,12 +1,38 @@
-import { useState, useCallback, useMemo, type ReactNode, useEffect } from "react";
-// useNavigate will be removed as navigation is decoupled
+import { createContext } from "preact";
+import {
+  useState,
+  useCallback,
+  useMemo,
+  useEffect,
+  useContext,
+} from "preact/hooks";
+import type { ComponentChildren } from "preact";
 import type { Canvasser } from "@/types";
 import { jwtDecode } from "jwt-decode";
-import { AuthContext, type JwtPayload } from "./auth";
 
-export const AuthProvider = ({ children }: { children: ReactNode }) => {
+// --- Type Definitions ---
+export interface AuthContextType {
+  isAuthenticated: boolean;
+  user: Canvasser | null;
+  token: string | null;
+  login: (token: string) => void;
+  logout: () => void;
+}
+
+export interface JwtPayload {
+  email: string;
+  id: number;
+  name: string;
+  iat: number;
+  exp: number;
+}
+
+// --- Context ---
+export const AuthContext = createContext<AuthContextType | null>(null);
+
+// --- Provider ---
+export const AuthProvider = ({ children }: { children: ComponentChildren }) => {
   const [token, setToken] = useState<string | null>(() => {
-    // Initialize token from localStorage synchronously
     return localStorage.getItem("authToken");
   });
 
@@ -20,17 +46,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setToken(newToken);
   }, []);
 
-  // Proactively check for an expired token on load or when the token changes.
   useEffect(() => {
     if (token) {
       try {
         const decoded: JwtPayload = jwtDecode(token);
-        // Check if the token is expired
         if (decoded.exp * 1000 < Date.now()) {
-          logout(); // Token is expired, so log out
+          logout();
         }
       } catch (error) {
-        // If the token is invalid or corrupted, log out
         console.error("Invalid token found, logging out:", error);
         logout();
       }
@@ -41,14 +64,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     if (!token) {
       return null;
     }
-    // At this point, the useEffect has already validated the token.
     const decoded: JwtPayload = jwtDecode(token);
     return { id: decoded.id, email: decoded.email, name: decoded.name };
   }, [token]);
 
   const isAuthenticated = useMemo(() => !!user, [user]);
 
-  const value = {
+  const value: AuthContextType = {
     isAuthenticated,
     user,
     token,
@@ -57,4 +79,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+};
+
+// --- Hook ---
+export const useAuth = (): AuthContextType => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
+  return context;
 };
