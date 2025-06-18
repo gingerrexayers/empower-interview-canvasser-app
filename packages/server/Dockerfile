@@ -8,9 +8,9 @@ RUN npm install -g pnpm@${PNPM_VERSION}
 
 WORKDIR /usr/src/app
 
-# First, copy the entire project source.
+# First, copy the server project source.
 # The root .dockerignore will prevent local node_modules from being included.
-COPY . .
+COPY packages/server ./packages/server/
 
 # Now, with all the source and package.json files in place,
 # run pnpm install. This becomes the single source of truth for all modules.
@@ -36,7 +36,6 @@ COPY pnpm-lock.yaml ./
 COPY package.json ./
 COPY pnpm-workspace.yaml ./
 COPY packages/server/package.json ./packages/server/
-COPY packages/client/package.json ./packages/client/
 
 # Install ONLY production dependencies.
 RUN pnpm install --filter server --prod

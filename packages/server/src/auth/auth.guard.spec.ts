@@ -75,9 +75,7 @@ describe('AuthGuard', () => {
       expect(result).toBe(true);
       expect(mockApiRequest.user).toEqual(mockUserPayload);
       // eslint-disable-next-line @typescript-eslint/unbound-method
-      expect(jwtService.verifyAsync).toHaveBeenCalledWith(mockToken, {
-        secret: process.env.JWT_SECRET || 'SUPER_SECRET_KEY',
-      });
+      expect(jwtService.verifyAsync).toHaveBeenCalledWith(mockToken);
       expect(mockApiRequest.user).toEqual(mockUserPayload);
     });
 
