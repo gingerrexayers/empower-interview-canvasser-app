@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { CreateVoterDto } from './dto/create-voter.dto';
 import { Voter } from './voter.entity';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -7,6 +7,7 @@ import { UpdateVoterDto } from './dto/update-voter.dto';
 
 @Injectable()
 export class VotersService {
+  private readonly logger = new Logger(VotersService.name);
   constructor(
     @InjectRepository(Voter)
     private readonly voterRepository: Repository<Voter>,
@@ -16,19 +17,36 @@ export class VotersService {
     createVoterDto: CreateVoterDto,
     canvasserId: number,
   ): Promise<Voter> {
+    this.logger.log(
+      `Attempting to create voter for canvasser ID: ${canvasserId} with data: ${JSON.stringify(
+        createVoterDto,
+      )}`,
+    );
     try {
       const voter = this.voterRepository.create({
         ...createVoterDto,
         canvasser_id: canvasserId,
       });
-      return await this.voterRepository.save(voter);
+      const savedVoter = await this.voterRepository.save(voter);
+      this.logger.log(
+        `Voter created successfully with ID: ${savedVoter.id} for canvasser ID: ${canvasserId}`,
+      );
+      return savedVoter;
     } catch (error) {
-      console.error(error);
+      this.logger.error(
+        `Error creating voter for canvasser ID: ${canvasserId}. Data: ${JSON.stringify(
+          createVoterDto,
+        )}`,
+        error instanceof Error ? error.stack : JSON.stringify(error),
+      );
       throw error;
     }
   }
 
   async getVoters(canvasserId: number, searchTerm?: string): Promise<Voter[]> {
+    this.logger.log(
+      `Fetching voters for canvasser ID: ${canvasserId}. Search term: "${searchTerm || 'None'}"`,
+    );
     if (searchTerm) {
       return this.voterRepository.find({
         where: [
@@ -53,16 +71,34 @@ export class VotersService {
     updateVoterDto: UpdateVoterDto,
     canvasserId: number,
   ): Promise<Voter> {
+    this.logger.log(
+      `Attempting to update voter ID: ${id} for canvasser ID: ${canvasserId} with data: ${JSON.stringify(
+        updateVoterDto,
+      )}`,
+    );
     const voter = await this.voterRepository.findOne({
       where: { id, canvasser_id: canvasserId },
     });
     if (!voter) {
+      this.logger.warn(
+        `Voter ID: ${id} not found for canvasser ID: ${canvasserId}. Update failed.`,
+      );
       throw new Error('Voter not found');
     }
-    return this.voterRepository.save({ ...voter, ...updateVoterDto });
+    const updatedVoter = await this.voterRepository.save({
+      ...voter,
+      ...updateVoterDto,
+    });
+    this.logger.log(
+      `Voter ID: ${id} updated successfully for canvasser ID: ${canvasserId}.`,
+    );
+    return updatedVoter;
   }
 
   async getVotersAsCsv(canvasserId: number): Promise<string> {
+    this.logger.log(
+      `Exporting voters to CSV for canvasser ID: ${canvasserId}.`,
+    );
     const voters = await this.voterRepository.find({
       where: { canvasser_id: canvasserId },
       order: {
@@ -71,6 +107,9 @@ export class VotersService {
     });
 
     if (!voters.length) {
+      this.logger.log(
+        `No voters found for CSV export for canvasser ID: ${canvasserId}.`,
+      );
       return 'No voters found';
     }
 
@@ -86,6 +125,10 @@ export class VotersService {
       return `${id},${name},${email},${notes},${createdAt},${updatedAt}`;
     });
 
-    return header + csvRows.join('\n');
+    const csvData = header + csvRows.join('\n');
+    this.logger.log(
+      `Successfully generated CSV for ${voters.length} voters for canvasser ID: ${canvasserId}.`,
+    );
+    return csvData;
   }
 }
