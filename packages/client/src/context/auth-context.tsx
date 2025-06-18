@@ -41,9 +41,19 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     if (!token) {
       return null;
     }
-    // At this point, the useEffect has already validated the token.
-    const decoded: JwtPayload = jwtDecode(token);
-    return { id: decoded.id, email: decoded.email, name: decoded.name };
+    try {
+      const decoded: JwtPayload = jwtDecode(token);
+      return { id: decoded.id, email: decoded.email, name: decoded.name };
+    } catch (error) {
+      // This catch block is crucial for handling invalid tokens on initial load.
+      // It prevents the app from crashing during render.
+      // The useEffect hook below will then handle cleaning up the invalid token.
+      console.error(
+        "Failed to decode token in user memo, treating as unauthenticated:",
+        error
+      );
+      return null;
+    }
   }, [token]);
 
   const isAuthenticated = useMemo(() => !!user, [user]);
