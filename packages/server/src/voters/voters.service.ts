@@ -22,25 +22,15 @@ export class VotersService {
         createVoterDto,
       )}`,
     );
-    try {
-      const voter = this.voterRepository.create({
-        ...createVoterDto,
-        canvasser_id: canvasserId,
-      });
-      const savedVoter = await this.voterRepository.save(voter);
-      this.logger.log(
-        `Voter created successfully with ID: ${savedVoter.id} for canvasser ID: ${canvasserId}`,
-      );
-      return savedVoter;
-    } catch (error) {
-      this.logger.error(
-        `Error creating voter for canvasser ID: ${canvasserId}. Data: ${JSON.stringify(
-          createVoterDto,
-        )}`,
-        error instanceof Error ? error.stack : JSON.stringify(error),
-      );
-      throw error;
-    }
+    const voter = this.voterRepository.create({
+      ...createVoterDto,
+      canvasser_id: canvasserId,
+    });
+    const savedVoter = await this.voterRepository.save(voter);
+    this.logger.log(
+      `Voter created successfully with ID: ${savedVoter.id} for canvasser ID: ${canvasserId}`,
+    );
+    return savedVoter;
   }
 
   async getVoters(canvasserId: number, searchTerm?: string): Promise<Voter[]> {

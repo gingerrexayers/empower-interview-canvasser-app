@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo, type ReactNode } from "react";
+import { useState, useCallback, useMemo, type ReactNode, useEffect } from "react";
 // useNavigate will be removed as navigation is decoupled
 import type { Canvasser } from "@/types";
 import { jwtDecode } from "jwt-decode";
@@ -20,27 +20,33 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setToken(newToken);
   }, []);
 
-  // useEffect to sync token from localStorage on initial load (already handled by useState initializer)
-  // The primary effect of token changes will be handled by useMemo for user and isAuthenticated.
-  // If other side effects are needed when the token changes (e.g., analytics), they can go here.
-
-  const user = useMemo((): Canvasser | null => {
+  // Proactively check for an expired token on load or when the token changes.
+  useEffect(() => {
     if (token) {
       try {
         const decoded: JwtPayload = jwtDecode(token);
+        // Check if the token is expired
         if (decoded.exp * 1000 < Date.now()) {
-          return null;
+          logout(); // Token is expired, so log out
         }
-        return { id: decoded.id, email: decoded.email, name: decoded.name };
       } catch (error) {
-        console.error("Invalid token during decode:", error);
-        return null;
+        // If the token is invalid or corrupted, log out
+        console.error("Invalid token found, logging out:", error);
+        logout();
       }
     }
-    return null;
+  }, [token, logout]);
+
+  const user = useMemo((): Canvasser | null => {
+    if (!token) {
+      return null;
+    }
+    // At this point, the useEffect has already validated the token.
+    const decoded: JwtPayload = jwtDecode(token);
+    return { id: decoded.id, email: decoded.email, name: decoded.name };
   }, [token]);
 
-  const isAuthenticated = useMemo(() => !!token && !!user, [token, user]);
+  const isAuthenticated = useMemo(() => !!user, [user]);
 
   const value = {
     isAuthenticated,

@@ -1,5 +1,5 @@
-import { useState, useContext } from "react";
-import { AuthContext } from "@/context/auth";
+import { useState } from "react";
+import { useAuth } from "@/hooks/use-auth";
 import type { Voter } from "@/types";
 import { useUpdateVoterNotes } from "@/hooks/use-voters"; // Assuming this hook is created
 import { Button } from "@/components/ui/button";
@@ -21,7 +21,7 @@ interface VoterListProps {
 export function VoterList({ voters }: VoterListProps) {
   const [editingVoterId, setEditingVoterId] = useState<number | null>(null);
   const [editingNotes, setEditingNotes] = useState("");
-  const { logout } = useContext(AuthContext)!;
+  const { logout } = useAuth();
   const updateNotesMutation = useUpdateVoterNotes({ onAuthError: logout });
 
   const handleEditClick = (voter: Voter) => {
