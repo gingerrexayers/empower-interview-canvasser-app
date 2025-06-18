@@ -52,7 +52,7 @@ export function VoterList({ voters }: VoterListProps) {
   }
 
   return (
-    <Table>
+    <Table className="w-full">
       <TableHeader className="sm:sticky sm:top-0 sm:z-10 sm:bg-card">
         <TableRow className="hidden sm:table-row">
           <TableHead className="w-[250px]">Voter</TableHead>
@@ -64,9 +64,9 @@ export function VoterList({ voters }: VoterListProps) {
         {voters.map((voter) => {
           const isEditing = editingVoterId === voter.id;
           return (
-            <TableRow key={voter.id} className="block sm:table-row">
+            <TableRow key={voter.id} className="flex flex-wrap items-start sm:table-row border-b sm:border-b-0 last:border-b-0">
               {/* Voter Info Cell */}
-              <TableCell className="block sm:table-cell sm:w-[250px] font-medium">
+              <TableCell className="w-full xs:w-auto xs:pr-2 sm:w-[250px] sm:pr-4 sm:table-cell font-medium py-2 px-4 sm:py-4">
                 <div>{voter.name}</div>
                 <div className="text-sm text-muted-foreground">
                   {voter.email}
@@ -74,7 +74,7 @@ export function VoterList({ voters }: VoterListProps) {
               </TableCell>
 
               {/* Notes Cell */}
-              <TableCell className="block sm:table-cell">
+              <TableCell className="w-full xs:flex-grow sm:table-cell py-2 px-4 sm:py-4">
                 {isEditing ? (
                   <Textarea
                     value={editingNotes}
@@ -93,14 +93,15 @@ export function VoterList({ voters }: VoterListProps) {
               </TableCell>
 
               {/* Actions Cell */}
-              <TableCell className="block sm:table-cell sm:w-[120px]">
-                <div className="flex sm:justify-end gap-2 mt-2 sm:mt-0">
+              <TableCell className="w-full sm:w-[120px] sm:table-cell sm:text-right py-2 px-4 sm:py-4">
+                <div className="flex flex-col xs:flex-row xs:flex-wrap w-full items-stretch xs:justify-start sm:justify-end gap-2">
                   {isEditing ? (
                     <>
                       <Button
                         size="sm"
                         onClick={() => handleSaveClick(voter.id)}
                         disabled={updateNotesMutation.isPending}
+                        className="w-full xs:w-auto"
                       >
                         <Save className="h-4 w-4" />
                         <span className="ml-1">Save</span>
@@ -110,6 +111,7 @@ export function VoterList({ voters }: VoterListProps) {
                         size="sm"
                         onClick={handleCancelClick}
                         disabled={updateNotesMutation.isPending}
+                        className="w-full xs:w-auto"
                       >
                         <XCircle className="h-4 w-4" />
                         <span className="ml-1">Cancel</span>
@@ -121,6 +123,7 @@ export function VoterList({ voters }: VoterListProps) {
                         variant="outline"
                         size="sm"
                         onClick={() => handleEditClick(voter)}
+                        className="w-full xs:w-auto"
                       >
                         <Pencil className="h-4 w-4" />
                         <span className="ml-1">Edit</span>

@@ -59,7 +59,11 @@ export function useUpdateVoterNotes() {
 
   return useMutation({
     mutationFn: ({ id, notes }: { id: number; notes: string }) =>
-      api.patch<Voter>(`/voters/${id}`, { notes }),
+      api.patch<Voter>(`/voters/${id}`, { notes }, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }),
     onSuccess: () => {
       void toast.success("Voter notes updated!");
       void queryClient.invalidateQueries({ queryKey: ["voters"] });
