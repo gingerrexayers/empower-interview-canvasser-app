@@ -15,7 +15,7 @@ import { AuthGuard } from '../auth/auth.guard';
 import { CreateVoterDto } from './dto/create-voter.dto';
 import { Voter } from './voter.entity';
 import { VotersService } from './voters.service';
-import type { RequestWithUser } from '../common/request-with-user';
+import type { RequestWithUser } from '../common/types/request-with-user.type';
 import { UpdateVoterDto } from './dto/update-voter.dto';
 
 @Controller('voters')

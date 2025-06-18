@@ -5,6 +5,7 @@ import { Voter } from './voter.entity';
 import { Like, Repository } from 'typeorm';
 import { CreateVoterDto } from './dto/create-voter.dto';
 import { UpdateVoterDto } from './dto/update-voter.dto';
+import { NotFoundException } from '@nestjs/common';
 import { ObjectLiteral } from 'typeorm';
 
 // Define a type for our mock repository for better autocompletion
@@ -147,7 +148,11 @@ describe('VotersService', () => {
       // Act & Assert
       await expect(
         service.updateVoter(999, updateVoterDto, canvasserId),
-      ).rejects.toThrow('Voter not found');
+      ).rejects.toThrow(
+        new NotFoundException(
+          `Voter with ID: 999 not found for canvasser ID: ${canvasserId}.`,
+        ),
+      );
     });
   });
 

@@ -126,26 +126,31 @@ describe('AuthService', () => {
     });
 
     it('should throw InternalServerErrorException for other errors', async () => {
-      // Mock console.error for this test to hide the expected error output
-      const consoleErrorSpy = jest
-        .spyOn(console, 'error')
-        .mockImplementation(() => {});
-
       // Arrange
-      canvasserRepository.save.mockRejectedValue(new Error('Some other error'));
-      (bcrypt.genSalt as jest.Mock).mockResolvedValue(salt);
-      (bcrypt.hash as jest.Mock).mockResolvedValue(hashedPassword);
+      const error = new Error('Some other error');
+      (bcrypt.genSalt as jest.Mock).mockResolvedValue('salt');
+      (bcrypt.hash as jest.Mock).mockResolvedValue('hashedPassword');
+      canvasserRepository.create.mockReturnValue({} as Canvasser);
+      canvasserRepository.save.mockRejectedValue(error);
+
+      // Spy on the private logger instance
+      const loggerSpy = jest
+        .spyOn(authService['logger'], 'error')
+        .mockImplementation(() => {});
 
       // Act & Assert
       await expect(authService.register(registerDto)).rejects.toThrow(
         InternalServerErrorException,
       );
-      expect(consoleErrorSpy).toHaveBeenCalledWith(
-        new Error('Some other error'),
+
+      expect(loggerSpy).toHaveBeenCalledTimes(1);
+      expect(loggerSpy).toHaveBeenCalledWith(
+        `Registration failed for email: ${registerDto.email} due to an internal error.`,
+        error.stack, // The service logs the error stack
       );
 
-      // Restore console.error
-      consoleErrorSpy.mockRestore();
+      // Cleanup
+      loggerSpy.mockRestore();
     });
   });
 

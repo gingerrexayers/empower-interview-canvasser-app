@@ -174,3 +174,50 @@ describe('RegisterDto Validation', () => {
     );
   });
 });
+
+describe('LoginDto Validation', () => {
+  const createLoginDto = (overrides: Partial<LoginDto>): LoginDto => {
+    const dto = new LoginDto();
+    dto.email = 'test@example.com';
+    dto.password = 'password123';
+    Object.assign(dto, overrides);
+    return dto;
+  };
+
+  it('should pass with valid data', async () => {
+    const dto = createLoginDto({});
+    const errors = await validate(dto);
+    expect(errors.length).toBe(0);
+  });
+
+  it('should fail if email is empty', async () => {
+    const dto = createLoginDto({ email: '' });
+    const errors = await validate(dto);
+    expect(errors.length).toBeGreaterThan(0);
+    // For empty email, IsNotEmpty fires before IsEmail
+    expect(errors[0].constraints).toHaveProperty(
+      'isNotEmpty',
+      'Email should not be empty.',
+    );
+  });
+
+  it('should fail if email is invalid', async () => {
+    const dto = createLoginDto({ email: 'invalid-email' });
+    const errors = await validate(dto);
+    expect(errors.length).toBeGreaterThan(0);
+    expect(errors[0].constraints).toHaveProperty(
+      'isEmail',
+      'Please provide a valid email address.',
+    );
+  });
+
+  it('should fail if password is empty', async () => {
+    const dto = createLoginDto({ password: '' });
+    const errors = await validate(dto);
+    expect(errors.length).toBeGreaterThan(0);
+    expect(errors[0].constraints).toHaveProperty(
+      'isNotEmpty',
+      'Password should not be empty.',
+    );
+  });
+});

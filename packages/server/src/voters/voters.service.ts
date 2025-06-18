@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { CreateVoterDto } from './dto/create-voter.dto';
 import { Voter } from './voter.entity';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -83,7 +83,9 @@ export class VotersService {
       this.logger.warn(
         `Voter ID: ${id} not found for canvasser ID: ${canvasserId}. Update failed.`,
       );
-      throw new Error('Voter not found');
+      throw new NotFoundException(
+        `Voter with ID: ${id} not found for canvasser ID: ${canvasserId}.`,
+      );
     }
     const updatedVoter = await this.voterRepository.save({
       ...voter,
