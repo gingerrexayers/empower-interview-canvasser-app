@@ -2,7 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Link, useNavigate } from "react-router-dom";
-import { toast } from "sonner"; // <-- Import toast from sonner
+import { toast } from "sonner";
 import { useAuth } from "@/hooks/use-auth";
 import api from "@/api";
 import { AppHeader } from "@/components/layout/app-header";

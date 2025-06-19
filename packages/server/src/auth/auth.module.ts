@@ -9,7 +9,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
   imports: [
     TypeOrmModule.forFeature([Canvasser]),
     JwtModule.registerAsync({
-      imports: [ConfigModule], // Make ConfigService available in this module's context for the factory
+      imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
         secret: configService.get<string>('JWT_SECRET'),
         signOptions: { expiresIn: '1h' },

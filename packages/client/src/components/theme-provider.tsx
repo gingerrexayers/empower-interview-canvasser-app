@@ -4,7 +4,6 @@ type ThemeProviderProps = {
   children: React.ReactNode;
 };
 
-// This component now only sets the light theme and does not provide a context.
 export function ThemeProvider({ children }: ThemeProviderProps) {
   useEffect(() => {
     const root = window.document.documentElement;

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useAuth } from "@/hooks/use-auth";
 import type { Voter } from "@/types";
-import { useUpdateVoterNotes } from "@/hooks/use-voters"; // Assuming this hook is created
+import { useUpdateVoterNotes } from "@/hooks/use-voters";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import {

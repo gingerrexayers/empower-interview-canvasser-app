@@ -24,10 +24,9 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { useCreateVoter } from "@/hooks/use-voters"; // Assuming this hook is created
+import { useCreateVoter } from "@/hooks/use-voters";
 import { toast } from "sonner";
 
-// Define the validation schema using Zod
 const voterFormSchema = z.object({
   name: z.string().min(1, { message: "Name is required." }),
   email: z
@@ -56,7 +55,7 @@ export function CreateVoterDialog() {
       email: "",
       notes: "",
     },
-    mode: "onChange", // Add mode for immediate validation
+    mode: "onChange",
   });
 
   const onSubmit = (values: VoterFormValues) => {

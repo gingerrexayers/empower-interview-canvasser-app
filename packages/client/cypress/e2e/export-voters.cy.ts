@@ -2,14 +2,10 @@
 
 describe("Voter CSV Export", () => {
   const uniqueUserSuffix = Date.now();
-  // testUserEmail, testUserPassword, and canvasserName are no longer needed here
-  // as cy.login() will handle user creation/login.
 
   beforeEach(() => {
     cy.login().then(() => {
-      // After login, visit the root of the app to trigger auth guards/redirects
       cy.visit("/");
-      // Ensure login was successful and we are on the dashboard
       cy.url().should("include", "/dashboard");
       cy.get('[data-cy="dashboard-title"]').should("be.visible");
     });

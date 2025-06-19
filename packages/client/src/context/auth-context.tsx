@@ -1,5 +1,10 @@
-import { useState, useCallback, useMemo, type ReactNode, useEffect } from "react";
-// useNavigate will be removed as navigation is decoupled
+import {
+  useState,
+  useCallback,
+  useMemo,
+  type ReactNode,
+  useEffect,
+} from "react";
 import type { Canvasser } from "@/types";
 import { jwtDecode } from "jwt-decode";
 import { AuthContext, type JwtPayload } from "./auth";
